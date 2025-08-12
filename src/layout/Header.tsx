@@ -1,110 +1,89 @@
 import { useState } from 'react';
 import SearchModal from '../components/SearchModal';
+import {
+  Menu,
+  House,
+  PaintbrushVertical,
+  Search,
+  Github,
+  Twitter,
+  Info,
+  Moon,
+  Heart,
+} from 'lucide-react';
 import LanguageSelector from '../components/LanguageSelector';
-import ThemeToggle from '../components/ThemeToggle';
 
-const Header = () => {
+interface HeaderProps {
+  onToggleSidebar: () => void;
+}
+
+const Header = ({ onToggleSidebar }: HeaderProps) => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   return (
     <>
-      <header className="bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="">
+        <div className="">
+          <div className="flex items-center justify-between gap-3">
             {/* Left section - Menu, Home, Paint Icons */}
-            <div className="flex items-center space-x-4">
-              {/* Menu icon */}
-              <button
-                className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                aria-label="Menu"
-              >
-                ☰
-              </button>
-
-              {/* Home icon */}
-              <button
-                className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                aria-label="Home"
-              >
-                🏠
-              </button>
-
-              {/* Paint brush icon */}
-              <button
-                className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                aria-label="Paint"
-              >
-                🎨
-              </button>
+            {/* Menu icon */}
+            <div
+              onClick={onToggleSidebar}
+              className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            >
+              <Menu size={25} />
+            </div>
+            <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+              <House size={25} />
+            </div>
+            <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+              <PaintbrushVertical size={25} />
             </div>
 
             {/* Center section - Search */}
-            <div className="flex-1 max-w-lg mx-8">
+            <button className="flex-1 ">
               <button
                 onClick={() => setIsSearchModalOpen(true)}
-                className="w-full flex items-center px-4 py-2 text-left text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="p-0 m-0 w-full flex items-center justify-start px-3.5 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-200 text-gray-400 border-none border-gray-300 dark:border-gray-700 border-1 active:border-green-500 cursor-pointer"
               >
-                <span className="text-xl mr-3">🔍</span>
-                <span>Tìm kiếm...</span>
+                <span className="gap-3 flex items-center text-[14px]">
+                  <Search size={12} />
+                  Search
+                  <span className="flex items-center space-x-1 border px-[5px] py-[2px] rounded">
+                    Cmd + K
+                  </span>
+                </span>
               </button>
-            </div>
+            </button>
 
-            {/* Right section - Language, Social Icons, Theme, Buy me coffee */}
-            <div className="flex items-center space-x-2">
-              {/* Language Selector */}
-              <LanguageSelector
-                currentLanguage={currentLanguage}
-                onLanguageChange={setCurrentLanguage}
-              />
+            <LanguageSelector
+              currentLanguage={currentLanguage}
+              onLanguageChange={setCurrentLanguage}
+            />
 
-              {/* Social Media Icons */}
-              <div className="flex items-center space-x-1 mx-2">
-                {/* GitHub */}
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                  aria-label="GitHub"
-                >
-                  📚
-                </a>
-
-                {/* Twitter X */}
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                  aria-label="Twitter X"
-                >
-                  🐦
-                </a>
-
-                {/* Info */}
-                <button
-                  className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xl"
-                  aria-label="Info"
-                >
-                  ℹ️
-                </button>
+            <div className="flex items-center">
+              <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+                <Github size={25} />
+              </div>
+              <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+                <Twitter size={25} />
               </div>
 
-              {/* Theme Toggle */}
-              <ThemeToggle />
-
-              {/* Buy me a coffee */}
-              <a
-                href="https://www.buymeacoffee.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 rounded-lg transition-colors font-medium"
-              >
-                <span className="text-sm">Buy me a coffee</span>
-                <span className="text-red-500">❤️</span>
-              </a>
+              <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+                <Info size={25} />
+              </div>
+              <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer">
+                <Moon size={25} />
+              </div>
             </div>
+
+            <button className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-br from-[#1E7D8D] to-[#2CB875] text-white rounded-full font-medium transition-all duration-300 hover:px-8 hover:shadow-lg border border-gray-300 cursor-pointer">
+              <span className="text-sm">Buy me a coffee</span>
+              <span>
+                <Heart size={12} />
+              </span>
+            </button>
           </div>
         </div>
       </header>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface LanguageSelectorProps {
   currentLanguage: string;
@@ -12,31 +13,37 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
-    { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'vi', name: 'Tiếng Việt' },
+    { code: 'en', name: 'English' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'ja', name: '日本語' },
   ];
 
   const currentLang =
     languages.find((lang) => lang.code === currentLanguage) || languages[0];
 
   return (
-    <div className="relative">
+    <div className="relative cursor-pointer">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+        className="flex items-center justify-between px-3.5 py-1.5 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 w-[100px] hover:shadow-lg focus:outline-none focus:ring-1 focus:ring-green-500"
       >
-        <span>{currentLang.flag}</span>
-        <span>{currentLang.code.toUpperCase()}</span>
-        <span className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}>
-          ▼
-        </span>
+        <div className="flex items-center space-x-2 flex-1 min-w-0">
+          <span className="text-sm font-medium truncate">
+            {currentLang.name}
+          </span>
+        </div>
+        <ChevronDown
+          size={16}
+          className={`transition-transform duration-200 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-700">
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 border border-gray-200 overflow-hidden">
           {languages.map((language) => (
             <button
               key={language.code}
@@ -44,14 +51,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 onLanguageChange(language.code);
                 setIsOpen(false);
               }}
-              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 text-sm transition-colors hover:text-green-500 ${
                 currentLanguage === language.code
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                  : 'text-gray-700 dark:text-gray-300'
+                  ? 'bg-green-50 text-green-600'
+                  : 'text-black hover:bg-gray-50'
               }`}
             >
-              <span>{language.flag}</span>
-              <span>{language.name}</span>
+              <span className="truncate">{language.name}</span>
             </button>
           ))}
         </div>
