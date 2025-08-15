@@ -29,6 +29,8 @@ export interface ToolCategory {
   items: ToolItem[];
 }
 
+export const FAVORITES_KEY = 'favoriteTools';
+
 export const toolCategories: ToolCategory[] = [
   {
     title: 'Crypto',
@@ -153,6 +155,24 @@ export const toolCategories: ToolCategory[] = [
 // Helper function to get all tools as a flat array
 export const getAllTools = (): ToolItem[] => {
   return toolCategories.flatMap((category) => category.items);
+};
+
+// Helper function to get favorite tools from localStorage
+export const getFavoriteTools = (): ToolItem[] => {
+  const stored = localStorage.getItem('favoriteTools');
+  if (!stored) return [];
+
+  const favoritePaths: string[] = JSON.parse(stored);
+  const allTools = getAllTools();
+
+  return allTools.filter((tool) => favoritePaths.includes(tool.path));
+};
+
+// Helper function to get toolCategories with favorites populated
+export const getToolCategoriesWithFavorites = (): ToolCategory[] => {
+  const categories = [...toolCategories];
+  categories[0].items = getFavoriteTools(); // Update Favorite Tools category
+  return categories;
 };
 
 // Helper function to check if a tool is available/implemented

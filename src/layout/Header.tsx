@@ -21,6 +21,11 @@ const Header = ({ onToggleSidebar }: HeaderProps) => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
+  const dataLanguage = [
+    { label: 'Tiếng Việt', value: 'vi' },
+    { label: 'English', value: 'en' },
+    { label: '日本語', value: 'ja' },
+  ];
   return (
     <>
       <header className="">
@@ -42,7 +47,7 @@ const Header = ({ onToggleSidebar }: HeaderProps) => {
             </div>
 
             {/* Center section - Search */}
-            <button className="flex-1 ">
+            <div className="flex-1 ">
               <button
                 onClick={() => setIsSearchModalOpen(true)}
                 className="p-0 m-0 w-full flex items-center justify-start px-3.5 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-200 text-gray-400 border-none border-gray-300 dark:border-gray-700 border-1 active:border-green-500 cursor-pointer"
@@ -55,11 +60,13 @@ const Header = ({ onToggleSidebar }: HeaderProps) => {
                   </span>
                 </span>
               </button>
-            </button>
+            </div>
 
             <LanguageSelector
-              currentLanguage={currentLanguage}
-              onLanguageChange={setCurrentLanguage}
+              data={dataLanguage}
+              currentSelect={currentLanguage}
+              onSelectChange={setCurrentLanguage}
+              width="w-[100px]"
             />
 
             <div className="flex items-center">

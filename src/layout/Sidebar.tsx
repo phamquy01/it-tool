@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import { toolCategories } from '../utils/constants/toolCategories';
+import {
+  FAVORITES_KEY,
+  toolCategories,
+} from '../utils/constants/toolCategories';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -18,80 +21,178 @@ const Sidebar = () => {
     );
   };
 
-  return (
-    <div className="w-full h-full bg-white shadow-lg flex flex-col">
-      {/* Fixed Header */}
-      <div
-        className="flex-shrink-0 text-white bg-gradient-to-br from-[#1E7D8D] to-[#2CB875] pt-4 pb-6 cursor-pointer hover:opacity-90 transition-opacity"
-        onClick={() => navigate('/')}
-      >
-        <div className="text-[25px] font-semibold mb-2 w-full text-center">
-          IT - TOOLS
-        </div>
-        <div className="text-[16px] font-semibold  w-full text-center text-white">
-          Handy tools for developers
-        </div>
-      </div>
+  const [categories, setCategories] = useState(toolCategories);
 
-      {/* Navigation - Only scrolls when content is too long */}
-      <div className="flex-1 bg-white overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-0">
-        {toolCategories.map((section) => {
-          const isOpen = openSections.includes(section.title);
-          return (
-            <div key={section.title}>
-              <button
-                onClick={() => toggleSection(section.title)}
-                className="flex items-center w-full rounded-md transition-discrete duration-200 p-0 mt-3 ml-1.5 font-medium "
-              >
-                <ChevronDown
-                  size={14}
-                  className={` text-gray-400 transition-transform duration-300 ${
-                    isOpen ? 'rotate-0' : '-rotate-90'
-                  }`}
-                />
-                <span className="text-[13px] font-medium text-gray-400 ml-2">
-                  {section.title}
-                </span>
-              </button>
+  useEffect(() => {
+    const loadFavorites = () => {
+      const stored = localStorage.getItem(FAVORITES_KEY);
+      const favorites: string[] = stored ? JSON.parse(stored) : [];
+
+      const favoriteItems = toolCategories
+        .flatMap((cat) => cat.items)
+        .filter((item) => favorites.includes(item.path));
+
+      if (favoriteItems.length > 0) {
+        const favoritesCategory = {
+          title: 'Favorites',
+          items: favoriteItems,
+        };
+        setCategories([favoritesCategory, ...toolCategories]);
+      } else {
+        setCategories(toolCategories);
+      }
+    };
+
+    // Load lần đầu
+    loadFavorites();
+
+    // Lắng nghe custom event khi favorites thay đổi
+    const handleFavoritesChange = () => {
+      loadFavorites();
+    };
+    window.addEventListener('favoritesChanged', handleFavoritesChange);
+
+    return () => {
+      window.removeEventListener('favoritesChanged', handleFavoritesChange);
+    };
+  }, []);
+
+  return (
+    <div className="overflow-hidden relative z-auto h-full w-full bg-white">
+      <div
+        className="w-full overflow-y-auto h-full min-h-screen max-h-screen scrollbar-w-none"
+        style={{ overflowX: 'hidden' }}
+      >
+        <div className="min-w-full">
+          {/* Fixed Header */}
+          <div
+            className="absolute block l-0 w-full z-10 overflow-hidden cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 300 275"
+              className="mt-[-65px]"
+            >
+              <defs>
+                <linearGradient
+                  id="a"
+                  x1="13.74"
+                  x2="303.96"
+                  y1="183.7"
+                  y2="45.59"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0" stopColor="#25636c"></stop>
+                  <stop offset=".6" stopColor="#3b956f"></stop>
+                  <stop offset="1" stopColor="#14a058"></stop>
+                </linearGradient>
+              </defs>
+              <path
+                fill="#14a058"
+                d="M0 187.5v25s0 37.5 50 50S300 225 300 225v-37.5Z"
+                opacity=".49"
+              ></path>
+              <path
+                fill="#14a058"
+                d="M300 237.5S287.5 275 250 275s-128.95-37.5-188.6-75 134.21 0 134.21 0Z"
+                opacity=".49"
+              ></path>
+              <path
+                fill="#14a058"
+                d="M0 200v12.5a241.47 241.47 0 0 0 112.5 50c73.6 11.69 130.61-14.86 150-25L300 200Z"
+                opacity=".38"
+              ></path>
+              <path
+                fill="url(#a)"
+                d="M0 0v212.5s62.5-12.5 150 25 150 0 150 0V0Z"
+              ></path>
+            </svg>
+            <div className="absolute left-0 w-full text-center top-4 text-white ">
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out flex ${
-                  isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
-                }`}
+                className="text-[25px] font-semibold"
+                onClick={() => navigate('/')}
               >
-                <div className=" w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"></div>
-                <div className="space-y-1">
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    const isSelected = location.pathname === item.path;
-                    return (
-                      <div
-                        onClick={() => handleItemClick(item.path)}
-                        key={item.label}
-                        className={`flex items-center rounded-md cursor-pointer transition-colors duration-200 mt-1 px-2 py-1.5 ${
-                          isSelected ? 'bg-[#ebf6f0]' : 'hover:bg-gray-50'
-                        }`}
-                      >
-                        <Icon
-                          size={20}
-                          className={`mr-2  ${
-                            isSelected ? 'text-[#18a058]' : 'text-black'
-                          }`}
-                        />
-                        <span
-                          className={`text-sm ml-1 ${
-                            isSelected ? 'text-[#18a058]' : 'text-black'
-                          }`}
-                        >
-                          {item.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                {' '}
+                IT - TOOLS{' '}
               </div>
+              <div className="w-1/2 h-0.5 rounded  mt-0 mb-1 mx-auto"></div>
+              <div className="text-[16px]">Handy tools for developers</div>
             </div>
-          );
-        })}
+          </div>
+
+          {/* Navigation - Only scrolls when content is too long */}
+          <div className="pt-[160px] pb-[200px]">
+            {categories.map((section) => {
+              const isOpen = openSections.includes(section.title);
+              return (
+                <div key={section.title}>
+                  <div
+                    onClick={() => toggleSection(section.title)}
+                    className="flex cursor-pointer items-center mt-[12px] opacity-60 ml-[6px] "
+                  >
+                    <span
+                      className={` text-[16px] opacity-50  ${
+                        isOpen ? 'rotate-0' : '-rotate-90'
+                      } transition-transform duration-150 ease-in-out`}
+                      style={{ lineHeight: '.25rem' }}
+                    >
+                      <ChevronDown
+                        className="w-[1em] h-[1em] text-[16px]"
+                        style={{ lineHeight: '.25rem' }}
+                      />
+                    </span>
+                    <span className="text-[13px] ml-2">{section.title}</span>
+                  </div>
+                  <div
+                    className={`w-full ${
+                      isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="flex">
+                      <div className=" w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"></div>
+                      <div className="flex-1 mb-[5px]  text-black overflow-hidden text-[14px] pb-[6px]">
+                        {section.items.map((item) => {
+                          const Icon = item.icon;
+                          const isSelected = location.pathname === item.path;
+                          return (
+                            <div
+                              key={item.label}
+                              className="h-[32px] mt-1.5 relative"
+                            >
+                              <div
+                                onClick={() => handleItemClick(item.path)}
+                                className={`pl-2 h-full grid items-center cursor-pointer relative pr-2 [grid-template-areas:'icon_content_arrow'] grid-cols-[auto_1fr_auto] mr-2.5 rounded ${
+                                  isSelected
+                                    ? 'bg-[#ebf6f0]'
+                                    : 'hover:bg-gray-100'
+                                }`}
+                              >
+                                <Icon
+                                  size={18}
+                                  className={`mr-2  ${
+                                    isSelected ? 'text-[#18a058]' : 'text-black'
+                                  }`}
+                                />
+                                <span
+                                  className={`text-sm ml-1 ${
+                                    isSelected ? 'text-[#18a058]' : 'text-black'
+                                  }`}
+                                >
+                                  {item.label}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,16 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import {
+  FAVORITES_KEY,
   getAllTools,
   isToolAvailable,
 } from '../utils/constants/toolCategories';
+import FavoriteTool from '../components/FavoriteTool';
 
 const Home = () => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<string[]>([]);
 
   const allTools = getAllTools();
+
   const favoriteTools = allTools.filter((tool) =>
     favorites.includes(tool.path)
   );
@@ -19,12 +22,31 @@ const Home = () => {
     navigate(path);
   };
 
-  const toggleFavorite = (path: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFavorites((prev) =>
-      prev.includes(path) ? prev.filter((p) => p !== path) : [...prev, path]
-    );
-  };
+  // Load favorites và listen cho changes
+  useEffect(() => {
+    const loadFavorites = () => {
+      const storedFavorites = localStorage.getItem(FAVORITES_KEY);
+      if (storedFavorites) {
+        setFavorites(JSON.parse(storedFavorites));
+      } else {
+        setFavorites([]);
+      }
+    };
+
+    // Load lần đầu
+    loadFavorites();
+
+    // Listen cho custom event khi favorites thay đổi
+    const handleFavoritesChange = () => {
+      loadFavorites();
+    };
+
+    window.addEventListener('favoritesChanged', handleFavoritesChange);
+
+    return () => {
+      window.removeEventListener('favoritesChanged', handleFavoritesChange);
+    };
+  }, []);
 
   return (
     <div className="mt-4">
@@ -68,37 +90,13 @@ const Home = () => {
                 <div
                   key={`fav-${tool.label}`}
                   onClick={() => isAvailable && handleToolClick(tool.path)}
-                  className={`bg-white rounded transition-all duration-200 px-6 py-5  border-gray-200 ${
-                    isAvailable
-                      ? 'hover:border-green-500 cursor-pointer hover:shadow-md'
-                      : 'opacity-60 cursor-not-allowed'
-                  }`}
+                  className={`bg-white rounded transition-all duration-200 px-6 py-5  border-gray-200  hover:border-green-500 border-1`}
                 >
                   <div className="py-2 rounded-lg text-gray-400 flex items-center justify-between">
                     <Icon size={40} />
                     <div className="relative group">
-                      <button
-                        onClick={(e) => toggleFavorite(tool.path, e)}
-                        className={`p-2 rounded-full transition-all duration-200  ${
-                          favorites.includes(tool.path)
-                            ? 'hover:bg-green-100   text-green-500'
-                            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                        }`}
-                      >
-                        <Heart
-                          size={16}
-                          fill={
-                            favorites.includes(tool.path)
-                              ? 'currentColor'
-                              : 'none'
-                          }
-                        />
-                      </button>
-                      <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {favorites.includes(tool.path)
-                          ? 'Remove from favorites'
-                          : 'Add to favorites'}
-                      </div>
+                      <FavoriteTool tool={tool} />
+                      {/* Tooltip */}
                     </div>
                   </div>
                   <div className="flex-1">
@@ -146,7 +144,7 @@ const Home = () => {
                 onClick={() => isAvailable && handleToolClick(tool.path)}
                 className={`bg-white rounded transition-all duration-200 px-6 py-5 border-1 border-gray-200 ${
                   isAvailable
-                    ? ' hover:border-green-500 cursor-pointer'
+                    ? ' hover:border-green-500  cursor-pointer'
                     : 'opacity-60 cursor-not-allowed'
                 }`}
               >
@@ -155,29 +153,8 @@ const Home = () => {
                 >
                   <Icon size={40} />
                   <div className="relative group">
-                    <button
-                      onClick={(e) => toggleFavorite(tool.path, e)}
-                      className={`p-2 rounded-full transition-all duration-200 border-gray-200 ${
-                        favorites.includes(tool.path)
-                          ? 'hover:bg-green-100   text-green-500'
-                          : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                      }`}
-                    >
-                      <Heart
-                        size={16}
-                        fill={
-                          favorites.includes(tool.path)
-                            ? 'currentColor'
-                            : 'none'
-                        }
-                      />
-                    </button>
+                    <FavoriteTool tool={tool} />
                     {/* Tooltip */}
-                    <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                      {favorites.includes(tool.path)
-                        ? 'Remove from favorites'
-                        : 'Add to favorites'}
-                    </div>
                   </div>
                 </div>
                 <div className="flex-1">
