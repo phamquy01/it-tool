@@ -150,36 +150,37 @@ const Sidebar = () => {
                     }`}
                   >
                     <div className="flex">
-                      <div className=" w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"></div>
-                      <div className="flex-1 mb-[5px]  text-black overflow-hidden text-[14px] pb-[6px]">
+                      <div className="w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"></div>
+                      <div className="flex-1 mb-[5px] text-black overflow-hidden text-[14px] pb-[6px]">
                         {section.items.map((item) => {
                           const Icon = item.icon;
                           const isSelected = location.pathname === item.path;
                           return (
-                            <div
-                              key={item.label}
-                              className="h-[32px] mt-1.5 relative"
-                            >
+                            <div key={item.label} className="h-[32px] mt-1.5 relative">
                               <div
                                 onClick={() => handleItemClick(item.path)}
-                                className={`pl-2 h-full grid items-center cursor-pointer relative pr-2 [grid-template-areas:'icon_content_arrow'] grid-cols-[auto_1fr_auto] mr-2.5 rounded ${
-                                  isSelected
-                                    ? 'bg-[#ebf6f0]'
-                                    : 'hover:bg-gray-100'
+                                className={`pl-2 h-full flex items-center cursor-pointer relative pr-2 mr-2.5 rounded ${
+                                  isSelected ? 'bg-[#ebf6f0]' : 'hover:bg-gray-100'
                                 }`}
+                                style={{ minWidth: 0 }}
                               >
                                 <Icon
                                   size={18}
-                                  className={`mr-2  ${
-                                    isSelected ? 'text-[#18a058]' : 'text-black'
-                                  }`}
+                                  className={`mr-2 ${isSelected ? 'text-[#18a058]' : 'text-black'}`}
                                 />
                                 <span
                                   className={`text-sm ml-1 ${
                                     isSelected ? 'text-[#18a058]' : 'text-black'
                                   }`}
+                                  style={{ minWidth: 0 }}
                                 >
-                                  {item.label}
+                                  <span
+                                    className="block truncate"
+                                    style={{ maxWidth: '100%' }}
+                                    title={item.label}
+                                  >
+                                    {item.label}
+                                  </span>
                                 </span>
                               </div>
                             </div>

@@ -13,6 +13,7 @@ import Bcrypt from '../../pages/Bcrypt';
 import UUID from '../../pages/UUID';
 import ULID from '../../pages/ULID';
 import Encryption from '../../pages/Encryption';
+import BIP39 from '../../pages/BIP39';
 
 export interface ToolItem {
   component: React.FC;
@@ -77,6 +78,14 @@ export const toolCategories: ToolCategory[] = [
         description: 'Encrypt and decrypt text using various methods',
         component: Encryption,
       },
+      {
+        label: 'BIP39 passphrase generator',
+        icon: Lock,
+        path: '/bip39-generator',
+        description:
+          'Generate a BIP39 passphrase from an existing or random mnemonic, or get the mnemonic from the passphrase.',
+        component: BIP39,
+      },
     ],
   },
 ];
@@ -102,10 +111,4 @@ export const getToolCategoriesWithFavorites = (): ToolCategory[] => {
   const categories = [...toolCategories];
   categories[0].items = getFavoriteTools(); // Update Favorite Tools category
   return categories;
-};
-
-// Helper function to check if a tool is available/implemented
-export const isToolAvailable = (path: string): boolean => {
-  const availableTools = ['/token-generator', '/hash-text'];
-  return availableTools.includes(path);
 };

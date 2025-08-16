@@ -2,12 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 
 import { toolCategories } from './utils/constants/toolCategories';
+import Home from './pages/Home';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
           {/* map over toolCategories to create routes */}
           {toolCategories.map((category) =>
             category.items.map((item) => (

@@ -1,11 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import {
-  FAVORITES_KEY,
-  getAllTools,
-  isToolAvailable,
-} from '../utils/constants/toolCategories';
+import { FAVORITES_KEY, getAllTools } from '../utils/constants/toolCategories';
 import FavoriteTool from '../components/FavoriteTool';
 
 const Home = () => {
@@ -84,12 +80,11 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {favoriteTools.map((tool) => {
               const Icon = tool.icon;
-              const isAvailable = isToolAvailable(tool.path);
 
               return (
                 <div
                   key={`fav-${tool.label}`}
-                  onClick={() => isAvailable && handleToolClick(tool.path)}
+                  onClick={() => handleToolClick(tool.path)}
                   className={`bg-white rounded transition-all duration-200 px-6 py-5  border-gray-200  hover:border-green-500 border-1`}
                 >
                   <div className="py-2 rounded-lg text-gray-400 flex items-center justify-between">
@@ -100,25 +95,10 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3
-                      className={`font-medium text-lg mb-1 ${
-                        isAvailable ? 'text-gray-900' : 'text-gray-500'
-                      }`}
-                    >
+                    <h3 className={`font-medium text-lg mb-1 `}>
                       {tool.label}
                     </h3>
-                    <p
-                      className={`text-[14px] p-0 ${
-                        isAvailable ? 'text-gray-500' : 'text-gray-400'
-                      }`}
-                    >
-                      {tool.description}
-                    </p>
-                    {!isAvailable && (
-                      <span className="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded">
-                        Coming Soon
-                      </span>
-                    )}
+                    <p className={`text-[14px] p-0 `}>{tool.description}</p>
                   </div>
                 </div>
               );
@@ -136,17 +116,12 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {allTools.map((tool) => {
             const Icon = tool.icon;
-            const isAvailable = isToolAvailable(tool.path);
 
             return (
               <div
                 key={tool.label}
-                onClick={() => isAvailable && handleToolClick(tool.path)}
-                className={`bg-white rounded transition-all duration-200 px-6 py-5 border-1 border-gray-200 ${
-                  isAvailable
-                    ? ' hover:border-green-500  cursor-pointer'
-                    : 'opacity-60 cursor-not-allowed'
-                }`}
+                onClick={() => handleToolClick(tool.path)}
+                className={`bg-white rounded transition-all duration-200 px-6 py-5 border-1 border-gray-200`}
               >
                 <div
                   className={`py-2 rounded-lg text-gray-400 flex items-center justify-between`}
@@ -158,25 +133,8 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3
-                    className={`font-medium text-lg mb-1 ${
-                      isAvailable ? 'text-gray-900' : 'text-gray-500'
-                    }`}
-                  >
-                    {tool.label}
-                  </h3>
-                  <p
-                    className={`text-[14px] p-0 ${
-                      isAvailable ? 'text-gray-500' : 'text-gray-400'
-                    }`}
-                  >
-                    {tool.description}
-                  </p>
-                  {!isAvailable && (
-                    <span className="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded">
-                      Coming Soon
-                    </span>
-                  )}
+                  <h3 className={`font-medium text-lg mb-1 `}>{tool.label}</h3>
+                  <p className={`text-[14px] p-0 `}>{tool.description}</p>
                 </div>
               </div>
             );
