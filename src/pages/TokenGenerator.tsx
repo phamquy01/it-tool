@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import PageTitleSection from '../components/PageTitleSection';
-import { RefreshCw, Copy } from 'lucide-react';
+
 
 const CHAR_SETS = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -18,7 +17,6 @@ const TokenGenerator = () => {
   });
   const [length, setLength] = useState(16);
   const [token, setToken] = useState('');
-  const [copied, setCopied] = useState(false);
 
   const generateToken = () => {
     let chars = '';
@@ -58,8 +56,6 @@ const TokenGenerator = () => {
   const handleCopy = () => {
     if (!token) return;
     navigator.clipboard.writeText(token);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
   };
 
   // Generate token on mount and when options/length change
@@ -70,10 +66,7 @@ const TokenGenerator = () => {
 
   return (
     <>
-      <PageTitleSection
-        title="Token Generator"
-        description="Generate random string with the chars you want, uppercase or lowercase letters, numbers and/or symbols."
-      />
+     
       <div className="max-w-[600px] mx-auto py-10 bg-white rounded-lg shadow-md p-6">
         <div className="mb-6 ml-24 flex flex-col gap-3">
           <div className="flex flex-wrap gap-4 mb-6">
@@ -221,23 +214,14 @@ const TokenGenerator = () => {
         <div className="flex justify-center items-center gap-3">
           <button
             onClick={handleCopy}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-              !token
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : copied
-                ? 'bg-green-600 text-white'
-                : 'bg-green-500 text-white hover:bg-green-600'
-            }`}
-            disabled={!token}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm cursor-pointer "
           >
-            <Copy size={18} />
-            {copied ? 'Copied!' : 'Copy'}
+            Copy
           </button>
           <button
             onClick={generateToken}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm cursor-pointer"
           >
-            <RefreshCw size={18} />
             Refresh
           </button>
         </div>

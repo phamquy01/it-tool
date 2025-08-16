@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+
 import Header from './Header';
 import Sidebar from './Sidebar';
+import ToolLayout from './ToolLayout';
 
 const MainLayout = () => {
   const [isSidebarHidden, setIsSidebarHidden] = useState(false);
@@ -21,7 +22,7 @@ const MainLayout = () => {
         <main className="flex-1 p-6">
           <Header onToggleSidebar={toggleSidebar} />
           <div>
-            <Outlet />
+            <ToolLayout />
           </div>
         </main>
       </div>

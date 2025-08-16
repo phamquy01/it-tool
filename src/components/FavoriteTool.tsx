@@ -57,10 +57,10 @@ const FavoriteTool = ({ tool }: { tool: { path: string } }) => {
     <>
       <button
         onClick={(e) => toggleFavorite(tool.path, e)}
-        className={`p-2 rounded-full transition-all duration-200 border-gray-200 ${
+        className={`p-2 rounded-full transition-all duration-200  ${
           favorites.includes(tool.path)
             ? 'hover:bg-green-100 text-green-500'
-            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+            : ' text-gray-400 hover:bg-gray-200'
         }
       
       `}

@@ -4,20 +4,18 @@ import {
   Hash,
   KeySquare,
   Lock,
-  List,
-  Shield,
-  Key,
   Grid,
-  FileText,
-  Calendar,
-  XSquare,
-  Code,
-  Link,
-  Link2,
   Fingerprint,
 } from 'lucide-react';
+import TokenGenerator from '../../pages/TokenGenerator';
+import HashText from '../../pages/HashText';
+import Bcrypt from '../../pages/Bcrypt';
+import UUID from '../../pages/UUID';
+import ULID from '../../pages/ULID';
+import Encryption from '../../pages/Encryption';
 
 export interface ToolItem {
+  component: React.FC;
   label: string;
   icon: LucideIcon;
   path: string;
@@ -40,24 +38,29 @@ export const toolCategories: ToolCategory[] = [
         icon: Shuffle,
         path: '/token-generator',
         description: 'Generate random tokens for authentication',
+        component: TokenGenerator,
       },
       {
         label: 'Hash text',
         icon: Hash,
         path: '/hash-text',
         description: 'Create hash values from text using various algorithms',
+        component: HashText,
       },
       {
         label: 'Bcrypt',
         icon: Fingerprint,
         path: '/bcrypt',
-        description: 'Hash passwords using bcrypt algorithm',
+        description:
+          'Hash and compare text string using bcrypt. Bcrypt is a password-hashing function based on the Blowfish cipher.',
+        component: Bcrypt,
       },
       {
         label: 'UUIDs generator',
         icon: KeySquare,
         path: '/uuid-generator',
         description: 'Generate unique identifiers (UUIDs)',
+        component: UUID,
       },
       {
         label: 'ULID generator',
@@ -65,88 +68,14 @@ export const toolCategories: ToolCategory[] = [
         path: '/ulid-generator',
         description:
           'Generate universally unique lexicographically sortable identifiers',
+        component: ULID,
       },
       {
         label: 'Encrypt / decrypt text',
         icon: Lock,
         path: '/encrypt-decrypt',
         description: 'Encrypt and decrypt text using various methods',
-      },
-      {
-        label: 'BIP39 passphrase gen...',
-        icon: List,
-        path: '/bip39',
-        description: 'Generate BIP39 mnemonic passphrases',
-      },
-      {
-        label: 'Hmac generator',
-        icon: Shield,
-        path: '/hmac',
-        description: 'Generate HMAC authentication codes',
-      },
-      {
-        label: 'RSA key pair generator',
-        icon: Key,
-        path: '/rsa',
-        description: 'Generate RSA public/private key pairs',
-      },
-      {
-        label: 'Password strength ana...',
-        icon: Shield,
-        path: '/password-strength',
-        description: 'Analyze password strength and security',
-      },
-      {
-        label: 'PDF signature checker',
-        icon: FileText,
-        path: '/pdf-signature',
-        description: 'Verify PDF digital signatures',
-      },
-    ],
-  },
-  {
-    title: 'Converter',
-    items: [
-      {
-        label: 'Date-time converter',
-        icon: Calendar,
-        path: '/date-time-converter',
-        description: 'Convert between different date and time formats',
-      },
-      {
-        label: 'Integer base converter',
-        icon: Shuffle,
-        path: '/integer-base-converter',
-        description: 'Convert numbers between different bases',
-      },
-      {
-        label: 'Roman numeral converter',
-        icon: XSquare,
-        path: '/roman-numeral-converter',
-        description: 'Convert between Roman numerals and numbers',
-      },
-    ],
-  },
-  {
-    title: 'Web',
-    items: [
-      {
-        label: 'Encode/decode URL',
-        icon: Link,
-        path: '/encode-decode-url',
-        description: 'Encode or decode URL formatted strings',
-      },
-      {
-        label: 'Escape HTML entities',
-        icon: Code,
-        path: '/escape-html-entities',
-        description: 'Convert special characters to HTML entities',
-      },
-      {
-        label: 'URL parser',
-        icon: Link2,
-        path: '/url-parser',
-        description: 'Parse and extract parts from a URL',
+        component: Encryption,
       },
     ],
   },

@@ -1,17 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
-import Home from './pages/Home';
-import TokenGenerator from './pages/TokenGenerator';
-import HashText from './pages/HashText';
+
+import { toolCategories } from './utils/constants/toolCategories';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/token-generator" element={<TokenGenerator />} />
-          <Route path="/hash-text" element={<HashText />} />
+          {/* map over toolCategories to create routes */}
+          {toolCategories.map((category) =>
+            category.items.map((item) => (
+              <Route
+                key={item.path}
+                path={item.path}
+                element={<item.component />}
+              />
+            ))
+          )}
         </Route>
       </Routes>
     </Router>

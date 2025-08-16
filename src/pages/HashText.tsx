@@ -1,5 +1,4 @@
 import LanguageSelector from '../components/LanguageSelector';
-import PageTitleSection from '../components/PageTitleSection';
 import { Copy } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -108,10 +107,6 @@ const HashText = () => {
 
   return (
     <>
-      <PageTitleSection
-        title="Hash text"
-        description="Hash a text string using the function you need : MD5, SHA1, SHA256, SHA224, SHA512, SHA384, SHA3 or RIPEMD160"
-      />
       <div className="max-w-[600px] mx-auto bg-white rounded shadow-md px-6 py-5">
         <div className="flex flex-col w-full">
           <label className="mb-[5px] text-left pr-3 text-[14px]">
