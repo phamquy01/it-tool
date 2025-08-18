@@ -6,6 +6,7 @@ import {
   Lock,
   Grid,
   Fingerprint,
+  Tv,
 } from 'lucide-react';
 import TokenGenerator from '../../pages/TokenGenerator';
 import HashText from '../../pages/HashText';
@@ -14,6 +15,9 @@ import UUID from '../../pages/UUID';
 import ULID from '../../pages/ULID';
 import Encryption from '../../pages/Encryption';
 import BIP39 from '../../pages/BIP39';
+import CheckLiveUID from '../../pages/CheckLiveUID';
+import HmacGenerator from '../../pages/HmacGenerator';
+import RSAKeyGenerator from '../../pages/RSAKeyGenerator';
 
 export interface ToolItem {
   component: React.FC;
@@ -31,6 +35,18 @@ export interface ToolCategory {
 export const FAVORITES_KEY = 'favoriteTools';
 
 export const toolCategories: ToolCategory[] = [
+  {
+    title: 'Facebook',
+    items: [
+      {
+        label: 'Check live',
+        icon: Tv,
+        path: '/check-live',
+        description: 'Check if a Facebook user is currently live',
+        component: CheckLiveUID,
+      },
+    ],
+  },
   {
     title: 'Crypto',
     items: [
@@ -85,6 +101,22 @@ export const toolCategories: ToolCategory[] = [
         description:
           'Generate a BIP39 passphrase from an existing or random mnemonic, or get the mnemonic from the passphrase.',
         component: BIP39,
+      },
+      {
+        label: 'Hmac generator',
+        icon: Tv,
+        path: '/hmac-generator',
+        description:
+          'Computes a hash-based message authentication code (HMAC) using a secret key and your favorite hashing function.',
+        component: HmacGenerator,
+      },
+      {
+        label: 'RSA key pair generator',
+        icon: Lock,
+        path: '/rsa-key-pair-generator',
+        description:
+          'Generate a new random RSA private and public pem certificate key pair.',
+        component: RSAKeyGenerator,
       },
     ],
   },
