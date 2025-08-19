@@ -54,23 +54,6 @@ h1 {
   line-height: 1.1;
 }
 
-/* Override default button styles when needed */
-/* button:not(.btn-custom) {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  margin-top: 12px;
-  margin-left: 6px;
-} */
-
-/* button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
 
 /* Scrollbar styles for dark mode */
 ::-webkit-scrollbar {
@@ -78,35 +61,7 @@ button:focus-visible {
 }
 
 
-/* :root {
-  --n-scrollbar-bezier: cubic-bezier(.4, 0, .2, 1);
-  --n-scrollbar-color: rgba(0, 0, 0, 0.25);
-  --n-scrollbar-color-hover: rgba(0, 0, 0, 0.4);
-  --n-scrollbar-border-radius: 5px;
-  --n-scrollbar-width: 5px;
-  --n-scrollbar-height: 5px;
-}
 
-::-webkit-scrollbar {
-  width: var(--n-scrollbar-width);
-  height: var(--n-scrollbar-height);
-  transition: background-color 0.3s var(--n-scrollbar-bezier);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--n-scrollbar-color);
-  border-radius: var(--n-scrollbar-border-radius);
-  transition: background-color 0.3s var(--n-scrollbar-bezier);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--n-scrollbar-color-hover);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-} */
 
 .dark ::-webkit-scrollbar-track {
   background: #1e293b;
@@ -115,3 +70,27 @@ button:focus-visible {
 .dark ::-webkit-scrollbar-thumb {
   background: #475569;
 }
+
+
+.custom-scroll {
+  overflow-y: auto; /* hoặc overflow-x nếu muốn ngang */
+  cursor: pointer; /* con trỏ khi hover */
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px; /* độ rộng thanh cuộn */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f0f0f0; /* nền xám */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #888; /* nút cuộn màu xám */
+  border-radius: 10px; /* bo tròn */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555; /* đậm hơn khi hover */
+}
+

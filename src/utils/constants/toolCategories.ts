@@ -39,7 +39,7 @@ export const toolCategories: ToolCategory[] = [
     title: 'Facebook',
     items: [
       {
-        label: 'Check live',
+        label: 'Check live UID',
         icon: Tv,
         path: '/check-live',
         description: 'Check if a Facebook user is currently live',
