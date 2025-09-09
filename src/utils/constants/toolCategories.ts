@@ -1,23 +1,53 @@
 import type { LucideIcon } from 'lucide-react';
 import {
-  Shuffle,
-  Hash,
-  KeySquare,
-  Lock,
-  Grid,
-  Fingerprint,
-  Tv,
+  Ampersand,
+  CopyMinus,
+  // Shuffle,
+  // Fingerprint,
+  // EyeOff,
+  // FileLock,
+  // ArrowDown01,
+  // LockKeyhole,
+  // Menu,
+  // FileText,
+  // HardDriveUpload,
+  // RectangleEllipsis,
+  // Calendar1,
+  // ArrowLeftRight,
+  Facebook,
+  Funnel,
+  Merge,
+  Scan,
+  ScanText,
+  ShieldCheck,
+  SmilePlus,
+  Split,
+  UserRoundSearch,
 } from 'lucide-react';
-import TokenGenerator from '../../pages/TokenGenerator';
-import HashText from '../../pages/HashText';
-import Bcrypt from '../../pages/Bcrypt';
-import UUID from '../../pages/UUID';
-import ULID from '../../pages/ULID';
-import Encryption from '../../pages/Encryption';
-import BIP39 from '../../pages/BIP39';
-import CheckLiveUID from '../../pages/CheckLiveUID';
-import HmacGenerator from '../../pages/HmacGenerator';
-import RSAKeyGenerator from '../../pages/RSAKeyGenerator';
+// import TokenGenerator from '../../pages/crypto/TokenGenerator';
+// import HashText from '../../pages/crypto/HashText';
+// import Bcrypt from '../../pages/crypto/Bcrypt';
+// import UUID from '../../pages/crypto/UUID';
+// import ULID from '../../pages/crypto/ULID';
+// import Encryption from '../../pages/crypto/Encryption';
+// import BIP39 from '../../pages/crypto/BIP39';
+// import HmacGenerator from '../../pages/crypto/HmacGenerator';
+// import RSAKeyGenerator from '../../pages/crypto/RSAKeyGenerator';
+// import PasswordStrengthAnalyser from '../../pages/crypto/PasswordStrengthAnalyser';
+// import PDFSignatureChecker from '../../pages/crypto/PDFSignatureChecker';
+// import DateTimeConverter from '../../pages/converter/DateTimeConverter';
+// import IntegerBaseConverter from '../../pages/converter/IntegerBaseConverter';
+import CheckLiveUID from '../../pages/facebook/CheckLiveUID';
+import FilterDataFromContent from '../../pages/facebook/FilterDataFromContent';
+import GetOtpFrom2FA from '../../pages/facebook/GetOtpFrom2FA';
+import FindIdFacebook from '../../pages/facebook/FindIdFacebook';
+import SplitString from '../../pages/string-process-tool/SplitString';
+import JoinString from '../../pages/string-process-tool/JoinStringContent';
+import JoinStringTwo from '../../pages/string-process-tool/JoinStringTwoContent';
+import RemoveDuplicate from '../../pages/string-process-tool/RemoveDuplicate';
+import IconFacebook from '../../pages/facebook/IconFacebook';
+import ScanFbGroupByKeyword from '../../pages/facebook/ScanFbGroupByKeyword';
+import ScanPostByKeyword from '../../pages/facebook/ScanPostByKeyword';
 
 export interface ToolItem {
   component: React.FC;
@@ -36,90 +66,192 @@ export const FAVORITES_KEY = 'favoriteTools';
 
 export const toolCategories: ToolCategory[] = [
   {
-    title: 'Facebook',
+    title: 'sidebar.tools.facebook.category',
     items: [
       {
-        label: 'Check live UID',
-        icon: Tv,
-        path: '/check-live',
-        description: 'Check if a Facebook user is currently live',
+        label: 'sidebar.tools.facebook.find_id_facebook.title',
+        icon: UserRoundSearch,
+        path: '/find-id-facebook',
+        description: 'sidebar.tools.facebook.find_id_facebook.description',
+        component: FindIdFacebook,
+      },
+      {
+        label: 'sidebar.tools.facebook.check_live_uid.title',
+        icon: Facebook,
+        path: '/check-live-uid',
+        description: 'sidebar.tools.facebook.check_live_uid.description',
         component: CheckLiveUID,
+      },
+      {
+        label: 'sidebar.tools.facebook.filter_data_from_content.title',
+        icon: Funnel,
+        path: '/filter-data-from-content',
+        description:
+          'sidebar.tools.facebook.filter_data_from_content.description',
+        component: FilterDataFromContent,
+      },
+      {
+        label: 'sidebar.tools.facebook.get_otp_2fa.title',
+        icon: ShieldCheck,
+        path: '/get-otp-2fa',
+        description: 'sidebar.tools.facebook.get_otp_2fa.description',
+        component: GetOtpFrom2FA,
+      },
+      {
+        label: 'sidebar.tools.facebook.icon_facebook.title',
+        icon: SmilePlus,
+        path: '/icon-facebook',
+        description: 'sidebar.tools.facebook.icon_facebook.description',
+        component: IconFacebook,
+      },
+      {
+        label: 'sidebar.tools.facebook.scan_facebook_group_by_keyword.title',
+        icon: Scan,
+        path: '/scan-facebook-group-by-keyword',
+        description:
+          'sidebar.tools.facebook.scan_facebook_group_by_keyword.description',
+        component: ScanFbGroupByKeyword,
+      },
+      {
+        label: 'sidebar.tools.facebook.scan_post_by_keyword.title',
+        icon: ScanText,
+        path: '/scan-post-by-keyword',
+        description: 'sidebar.tools.facebook.scan_post_by_keyword.description',
+        component: ScanPostByKeyword,
       },
     ],
   },
   {
-    title: 'Crypto',
+    title: 'sidebar.tools.string_processing_tool.category',
     items: [
       {
-        label: 'Token generator',
-        icon: Shuffle,
-        path: '/token-generator',
-        description: 'Generate random tokens for authentication',
-        component: TokenGenerator,
-      },
-      {
-        label: 'Hash text',
-        icon: Hash,
-        path: '/hash-text',
-        description: 'Create hash values from text using various algorithms',
-        component: HashText,
-      },
-      {
-        label: 'Bcrypt',
-        icon: Fingerprint,
-        path: '/bcrypt',
+        label: 'sidebar.tools.string_processing_tool.split_string.title',
+        icon: Split,
+        path: '/split-string',
         description:
-          'Hash and compare text string using bcrypt. Bcrypt is a password-hashing function based on the Blowfish cipher.',
-        component: Bcrypt,
+          'sidebar.tools.string_processing_tool.split_string.description',
+        component: SplitString,
       },
       {
-        label: 'UUIDs generator',
-        icon: KeySquare,
-        path: '/uuid-generator',
-        description: 'Generate unique identifiers (UUIDs)',
-        component: UUID,
-      },
-      {
-        label: 'ULID generator',
-        icon: Grid,
-        path: '/ulid-generator',
+        label: 'sidebar.tools.string_processing_tool.join_string.title',
+        icon: Merge,
+        path: '/join-string-1',
         description:
-          'Generate universally unique lexicographically sortable identifiers',
-        component: ULID,
+          'sidebar.tools.string_processing_tool.join_string.description',
+        component: JoinString,
       },
       {
-        label: 'Encrypt / decrypt text',
-        icon: Lock,
-        path: '/encrypt-decrypt',
-        description: 'Encrypt and decrypt text using various methods',
-        component: Encryption,
-      },
-      {
-        label: 'BIP39 passphrase generator',
-        icon: Lock,
-        path: '/bip39-generator',
+        label: 'sidebar.tools.string_processing_tool.join_string_two.title',
+        icon: Ampersand,
+        path: '/join-string-2',
         description:
-          'Generate a BIP39 passphrase from an existing or random mnemonic, or get the mnemonic from the passphrase.',
-        component: BIP39,
+          'sidebar.tools.string_processing_tool.join_string_two.description',
+        component: JoinStringTwo,
       },
       {
-        label: 'Hmac generator',
-        icon: Tv,
-        path: '/hmac-generator',
+        label: 'sidebar.tools.string_processing_tool.remove_duplicate.title',
+        icon: CopyMinus,
+        path: '/remove-duplicate',
         description:
-          'Computes a hash-based message authentication code (HMAC) using a secret key and your favorite hashing function.',
-        component: HmacGenerator,
-      },
-      {
-        label: 'RSA key pair generator',
-        icon: Lock,
-        path: '/rsa-key-pair-generator',
-        description:
-          'Generate a new random RSA private and public pem certificate key pair.',
-        component: RSAKeyGenerator,
+          'sidebar.tools.string_processing_tool.remove_duplicate.description',
+        component: RemoveDuplicate,
       },
     ],
   },
+  //       component: TokenGenerator,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.hash_text.title',
+  //       icon: EyeOff,
+  //       path: '/hash-text',
+  //       description: 'sidebar.tools.crypto.hash_text.description',
+  //       component: HashText,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.bcrypt.title',
+  //       icon: FileLock,
+  //       path: '/bcrypt',
+  //       description: 'sidebar.tools.crypto.bcrypt.description',
+  //       component: Bcrypt,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.uuid_generator.title',
+  //       icon: Fingerprint,
+  //       path: '/uuid-generator',
+  //       description: 'sidebar.tools.crypto.uuid_generator.description',
+  //       component: UUID,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.ulid_generator.title',
+  //       icon: ArrowDown01,
+  //       path: '/ulid-generator',
+  //       description: 'sidebar.tools.crypto.ulid_generator.description',
+  //       component: ULID,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.encryption.title',
+  //       icon: LockKeyhole,
+  //       path: '/encrypt-decrypt',
+  //       description: 'sidebar.tools.crypto.encryption.description',
+  //       component: Encryption,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.bip39_generator.title',
+  //       icon: Menu,
+  //       path: '/bip39-generator',
+  //       description: 'sidebar.tools.crypto.bip39_generator.description',
+  //       component: BIP39,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.hmac_generator.title',
+  //       icon: Menu,
+  //       path: '/hmac-generator',
+  //       description: 'sidebar.tools.crypto.hmac_generator.description',
+  //       component: HmacGenerator,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.rsa_key_pair_generator.title',
+  //       icon: FileText,
+  //       path: '/rsa-key-pair-generator',
+  //       description: 'sidebar.tools.crypto.rsa_key_pair_generator.description',
+  //       component: RSAKeyGenerator,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.password_strength_analyser.title',
+  //       icon: RectangleEllipsis,
+  //       path: '/password-strength-analyser',
+  //       description:
+  //         'sidebar.tools.crypto.password_strength_analyser.description',
+  //       component: PasswordStrengthAnalyser,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.crypto.pdf_signature_checker.title',
+  //       icon: HardDriveUpload,
+  //       path: '/pdf-signature-checker',
+  //       description: 'sidebar.tools.crypto.pdf_signature_checker.description',
+  //       component: PDFSignatureChecker,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'sidebar.tools.converter.category',
+  //   items: [
+  //     {
+  //       label: 'sidebar.tools.converter.date_time.title',
+  //       icon: Calendar1,
+  //       path: '/date-time-converter',
+  //       description: 'sidebar.tools.converter.date_time.description',
+  //       component: DateTimeConverter,
+  //     },
+  //     {
+  //       label: 'sidebar.tools.converter.integer_base.title',
+  //       icon: ArrowLeftRight,
+  //       path: '/integer-base-converter',
+  //       description: 'sidebar.tools.converter.integer_base.description',
+  //       component: IntegerBaseConverter,
+  //     },
+  //   ],
+  // },
 ];
 
 // Helper function to get all tools as a flat array
@@ -141,6 +273,6 @@ export const getFavoriteTools = (): ToolItem[] => {
 // Helper function to get toolCategories with favorites populated
 export const getToolCategoriesWithFavorites = (): ToolCategory[] => {
   const categories = [...toolCategories];
-  categories[0].items = getFavoriteTools(); // Update Favorite Tools category
+  categories[0].items = getFavoriteTools();
   return categories;
 };

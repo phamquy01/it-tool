@@ -1,7 +1,8 @@
 import { X } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import LanguageSelector from '../components/LanguageSelector';
+import LanguageSelector from '../../components/Selector';
 import { AES, RC4, Rabbit, TripleDES, enc } from 'crypto-js';
+import { useTranslation } from 'react-i18next';
 
 const Encryption = () => {
   const algos = [
@@ -25,7 +26,7 @@ const Encryption = () => {
   const [cypherInput, setCypherInput] = useState('lorem ipsum dolor sit amet');
   const [cypherAlgo, setCypherAlgo] = useState('AES');
   const [cypherSecret, setCypherSecret] = useState('my secret key');
-  //   const [cypherOutput, setCypherOutput] = useState('');
+  const { t } = useTranslation();
 
   const getAlgorithm = (algo: string) => {
     switch (algo) {
@@ -59,15 +60,15 @@ const Encryption = () => {
 
   return (
     <div className="flex flex-col xl:flex-row justify-center gap-4 max-w-[600px] mx-auto xl:max-w-max ">
-      <div className="max-w-[600px] py-10 bg-white rounded-lg shadow-md p-6">
+      <div className="max-w-[600px] py-10 bg-zinc-50 dark:bg-zinc-800 rounded-lg shadow-md p-6">
         <div className=" flex justify-between items-baseline gap-4 mb-6">
           <div className="flex flex-col w-full h-full">
             <label className="mb-[5px] text-left pr-3 text-[14px]">
               Your text:
             </label>
-            <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center">
+            <div className="input-wrapper resize-y overflow-hidden pr-1 pl-3 border border-zinc-300 dark:border-zinc-700 rounded flex items-center">
               <textarea
-                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
+                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
                 placeholder="The string to cypher"
                 value={cypherInput}
                 onChange={(e) => setCypherInput(e.target.value)}
@@ -86,16 +87,16 @@ const Encryption = () => {
               <label className="mb-[5px] text-left pr-3 text-[14px]">
                 Your secret key:
               </label>
-              <div className="flex items-center gap-2 px-3 bg-white border border-gray-300 rounded w-full">
+              <div className="input-wrapper flex items-center gap-2 px-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded w-full">
                 <input
                   type="text"
-                  className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
+                  className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
                   value={cypherSecret}
                   onChange={(e) => setCypherSecret(e.target.value)}
                 />
 
                 <div
-                  className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
+                  className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-zinc-200 dark:hover:bg-zinc-800 active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
                   onClick={() => {
                     setCypherSecret('');
                   }}
@@ -122,9 +123,9 @@ const Encryption = () => {
             <label className="mb-[5px] text-left pr-3 text-[14px]">
               Your text encrypted:
             </label>
-            <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center">
+            <div className="input-wrapper resize-y overflow-hidden pr-1 pl-3 border border-zinc-300 dark:border-zinc-700 rounded flex items-center">
               <textarea
-                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
+                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
                 placeholder="The string to cypher"
                 value={cypherOutput}
                 rows={1}
@@ -141,16 +142,16 @@ const Encryption = () => {
         </div>
       </div>
 
-      <div className="max-w-[600px] py-10 bg-white rounded-lg shadow-md p-6">
+      <div className="max-w-[600px] py-10 bg-zinc-50 dark:bg-zinc-800 rounded-lg shadow-md p-6">
         <div className=" flex justify-between items-baseline gap-4 mb-6">
           <div className="flex flex-col w-full h-full">
             <label className="mb-[5px] text-left pr-3 text-[14px]">
-              Your text:
+              {t('encryption.your_text')}
             </label>
-            <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center">
+            <div className="input-wrapper resize-y overflow-hidden pr-1 pl-3 border border-zinc-300 dark:border-zinc-700 rounded flex items-center">
               <textarea
-                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
-                placeholder="The string to cypher"
+                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
+                placeholder={t('encryption.your_text_placeholder')}
                 value={decryptInput}
                 onChange={(e) => setDecryptInput(e.target.value)}
                 rows={1}
@@ -166,18 +167,18 @@ const Encryption = () => {
           <div className="w-full">
             <div className="flex flex-col w-full mb-1">
               <label className="mb-[5px] text-left pr-3 text-[14px]">
-                Your secret key:
+                {t('encryption.your_secret_key')}
               </label>
-              <div className="flex items-center gap-2 px-3 bg-white border border-gray-300 rounded w-full">
+              <div className="input-wrapper flex items-center gap-2 px-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded w-full">
                 <input
                   type="text"
-                  className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
+                  className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
                   value={decryptSecret}
                   onChange={(e) => setDecryptSecret(e.target.value)}
                 />
 
                 <div
-                  className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
+                  className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-zinc-200 dark:hover:bg-zinc-800 active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
                   onClick={() => {
                     setDecryptSecret('');
                   }}
@@ -188,7 +189,7 @@ const Encryption = () => {
             </div>
             <div className="flex flex-col w-full">
               <label className="mb-[5px] text-left pr-3 text-[14px]">
-                Encryption algorithm:
+                {t('encryption.encryption_algorithm')}
               </label>
               <LanguageSelector
                 data={algos}
@@ -202,12 +203,12 @@ const Encryption = () => {
         <div className="flex justify-end">
           <div className="flex flex-col w-full h-full">
             <label className="mb-[5px] text-left pr-3 text-[14px]">
-              Your decrypted text:
+              {t('encryption.your_text_decrypted')}
             </label>
-            <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center">
+            <div className="input-wrapper resize-y overflow-hidden pr-1 pl-3 border border-zinc-300 dark:border-zinc-700 rounded flex items-center">
               <textarea
-                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
-                placeholder="your string hash"
+                className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-transparent text-zinc-900 dark:text-zinc-100"
+                placeholder={t('encryption.your_text_placeholder')}
                 value={decryptOutput}
                 rows={1}
                 ref={(el) => {

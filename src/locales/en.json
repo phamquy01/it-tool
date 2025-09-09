@@ -1,0 +1,387 @@
+{
+  "common": {
+    "copied_button": "Copied!",
+    "remove_duplicate": "Remove duplicate",
+    "input_placeholder": "Enter content...",
+    "loading": "Loading...",
+    "no_data": "No data available",
+    "error_fetching_data": "Unable to fetch data"
+  },
+  "home": {
+    "title_card": "Do you like max-tools?",
+    "description_card": "Start using the tools below now to maximize your work efficiency!",
+    "usage_statistics": "Usage statistics"
+  },
+  "header": {
+    "search": "Search",
+    "search_placeholder": "Type to search..."
+  },
+  "sidebar": {
+    "title": "MAX - TOOLS",
+    "favorite": "Your favorite tools",
+    "tools": {
+      "facebook": {
+        "category": "Facebook",
+        "check_live_uid": {
+          "title": "Check Facebook UID",
+          "description": "Check if a Facebook UID is active."
+        },
+        "filter_data_from_content": {
+          "title": "Filter phone and Zalo groups",
+          "description": "Filter phone numbers and Zalo groups from content"
+        },
+        "get_otp_2fa": {
+          "title": "Get OTP 2FA",
+          "description": "Get your two-factor authentication code easily"
+        },
+        "find_id_facebook": {
+          "title": "Find Facebook ID",
+          "description": "Find Facebook ID from username or profile URL"
+        },
+        "scan_facebook_group_by_keyword": {
+          "title": "Scan Groups by Keyword",
+          "description": "Scan Facebook groups based on the keyword you provide."
+        },
+        "icon_facebook": {
+          "title": "Emoji",
+          "description": "Get emoji icons."
+        },
+        "scan_post_by_keyword": {
+          "title": "Scan Post by Keyword",
+          "description": "Scan Facebook posts based on the keyword you provide."
+        }
+      },
+      "string_processing_tool": {
+        "category": "String Processing Tool",
+        "split_string": {
+          "title": "Split String",
+          "description": "Split a string into multiple parts based on a delimiter."
+        },
+        "join_string": {
+          "title": "Join String 1",
+          "description": "Combine multiple strings into a single string."
+        },
+        "join_string_two": {
+          "title": "Join String 2",
+          "description": "Combine multiple strings into a single string with a custom delimiter."
+        },
+        "remove_duplicate": {
+          "title": "Remove Duplicate",
+          "description": "Remove duplicate strings from a list."
+        }
+      },
+      "crypto": {
+        "category": "Crypto",
+        "token_generator": {
+          "title": "Token generator",
+          "description": "Generate a random string with the characters you want: uppercase or lowercase letters, numbers, and/or symbols."
+        },
+        "hash_text": {
+          "title": "Hash text",
+          "description": "Hash a text string using the function you need: MD5, SHA1, SHA256, SHA224, SHA512, SHA384, SHA3, or RIPEMD160."
+        },
+        "bcrypt": {
+          "title": "Bcrypt",
+          "description": "Hash and compare text strings"
+        },
+        "uuid_generator": {
+          "title": "UUIDs generator",
+          "description": "Generate unique identifiers (UUIDs)"
+        },
+        "ulid_generator": {
+          "title": "ULID generator",
+          "description": "Generate universally unique lexicographically sortable identifiers"
+        },
+        "encryption": {
+          "title": "Encrypt / decrypt text",
+          "description": "Encrypt and decrypt text using various methods"
+        },
+        "bip39_generator": {
+          "title": "BIP39 passphrase generator",
+          "description": "Generate a BIP39 passphrase from an existing or random mnemonic, or get the mnemonic from the passphrase."
+        },
+        "hmac_generator": {
+          "title": "HMAC generator",
+          "description": "Computes a hash-based message authentication code (HMAC) using a secret key and your favorite hashing function."
+        },
+        "rsa_key_pair_generator": {
+          "title": "RSA key pair generator",
+          "description": "Generate a new random RSA private and public pem certificate key pair."
+        },
+        "password_strength_analyser": {
+          "title": "Password strength analyser",
+          "description": "Discover the strength of your password with this client-side-only password strength analyser and crack time estimation tool."
+        },
+        "pdf_signature_checker": {
+          "title": "PDF signature checker",
+          "description": "Verify the signatures of a PDF file. A signed PDF file contains one or more signatures that may be used to determine whether the contents of the file have been altered since the file was signed."
+        }
+      },
+      "converter": {
+        "category": "Converter",
+        "date_time": {
+          "title": "Date-time converter",
+          "description": "Convert date and time into various formats"
+        },
+        "integer_base": {
+          "title": "Integer base converter",
+          "description": "Convert integers from one base to another"
+        }
+      }
+    }
+  },
+  "check_live_uid": {
+    "input_title": "Clone UID",
+    "input_placeholder": "Enter UID, one per line",
+    "checking": "Checking...",
+    "check_live_uid": "Check live UID",
+    "live_uid": "Live UID",
+    "die_uid": "Die UID",
+    "copy_live_uid": "Copy live UID",
+    "copy_die_uid": "Copy die UID"
+  },
+  "filter_data": {
+    "input_title": "Enter data to search:",
+    "input_placeholder": "Enter content to filter...",
+    "checking": "Filtering...",
+    "button_check_phone_zalo": "Click to find phone numbers and Zalo groups",
+    "no_content": "No content to filter",
+    "found_phones": "{{count}} phone numbers found",
+    "found_zalo_groups": "{{count}} Zalo groups found",
+    "phone_list": "Phone number list",
+    "zalo_group_list": "Zalo group list",
+    "copy_phone": "Copy phone number",
+    "copy_zalo_group": "Copy Zalo group",
+    "phone_copied": "Phone number copied!",
+    "zalo_group_copied": "Zalo group copied!"
+  },
+  "get_otp_from_2fa": {
+    "input_label": "<span class='font-bold'>* 2FA Secret</span> Get code for 2 factor authentication easiest - Please store your 2FA secret safely",
+    "input_placeholder": "Enter your 2FA secret, one per line...",
+    "button_generate_otp": "Get OTP",
+    "output_label": "<span class='font-bold'>* 2FA Code</span> 2-step verification code",
+    "copied_to_clipboard": "Copied"
+  },
+  "find_id_facebook": {
+    "title": "A free tool to easily get Facebook UID.",
+    "link_label": "Facebook link",
+    "link_placeholder": "Enter the Facebook link to get the ID",
+    "button_get_id": "Get ID",
+    "get_id_success": "Get ID successfully!",
+    "get_id_error": "ID not found or invalid link!"
+  },
+  "scan_facebook_group": {
+    "cookie": "Cookie (The system guarantees not to store users cookies)",
+    "cookie_guide": "How to get Facebook cookie",
+    "proxy": "Proxy",
+    "keyword": "Keyword",
+    "limit": "Group limit",
+    "button_scan": "Start",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "groups": "Groups",
+    "link_group": "Group link",
+    "id_group": "Group ID",
+    "name_group": "Group name",
+    "member_group": "Members",
+    "privacy_group": "Privacy",
+    "description_group": "Description",
+    "fetch_success": "Fetched groups successfully",
+    "scan_success": "Scanned groups successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_groups_found": "Total groups found"
+  },
+  "scan_post_by_keyword": {
+    "cookie": "Cookie (The system guarantees not to store users cookies)",
+    "cookie_guide": "How to get Facebook cookie",
+    "proxy": "Proxy",
+    "keyword": "Keyword",
+    "limit": "Post limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "post": "Posts",
+    "link_post": "Post link",
+    "id_post": "Post ID",
+    "content_post": "Post content",
+    "creation_time_post": "Creation time",
+    "image_post": "Image",
+    "description_post": "Description",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_posts_found": "Total posts found",
+    "view_image": "View image"
+  },
+  "string_processing_tool": {
+    "input_title": "Enter the string to process:",
+    "input_placeholder": "content1|content2|content3",
+    "separator": "Separated by character:",
+    "start_cut": "Start cut:",
+    "end_cut": "End at:",
+    "button_split": "Start Split",
+    "output_title": "Result:"
+  },
+  "join_string": {
+    "input_title": "Enter the string to join",
+    "input_placeholder": "content1|content2|content3",
+    "start_join": "String to add at the beginning of each line:",
+    "start_join_placeholder": "Start|",
+    "end_join": "String to add at the end of each line:",
+    "end_join_placeholder": "|End",
+    "button_join": "Start Join",
+    "output_title": "Result"
+  },
+  "join_string_two": {
+    "input_title_1": "Enter string to join 1",
+    "input_title_2": "Enter string to join 2",
+    "content_separator": "Content to separate two lines:",
+    "content_separator_placeholder": "Enter separator content...",
+    "button_join": "Start Join",
+    "output_title": "Result"
+  },
+  "remove_duplicate": {
+    "input_title": "Nhập chuỗi để lọc trùng lặp",
+    "option": "Tùy chọn:",
+    "export_filtered_list": "Xuất danh sách đã lọc trùng lặp",
+    "export_duplicate_list": "Xuất danh sách trùng lặp",
+    "export_non_duplicate_list": "Xuất danh sách không trùng lặp",
+    "button_remove_duplicate": "Bắt đầu lọc",
+    "output_title": "Kết quả",
+    "input_required": "Vui lòng nhập dữ liệu"
+  },
+  "icon_facebook": {
+    "title": "Search Facebook icon:",
+    "selected": "Selected Facebook icon:",
+    "activities": "Activities",
+    "symbols": "Symbols",
+    "flags": "Flags",
+    "travel & places": "Travel & Places",
+    "food & drink": "Food & Drink",
+    "animals & nature": "Animals & Nature",
+    "people & body": "People & Body",
+    "objects": "Objects",
+    "component": "Components",
+    "smileys & emotion": "Smileys & Emotion"
+  },
+  "token_generator": {
+    "length": "Length",
+    "include_uppercase": "Uppercase (A-Z)",
+    "include_lowercase": "Lowercase (a-z)",
+    "include_numbers": "Numbers (0-9)",
+    "include_symbols": "Symbols (!@#$...)",
+    "copied_button": "Copied!",
+    "copy_button": "Copy",
+    "refresh_button": "Regenerate"
+  },
+  "hash_text": {
+    "input_title": "Enter text to hash:",
+    "input_placeholder": "Your string to hash...",
+    "digest_encoding": "Digest encoding"
+  },
+  "bcrypt": {
+    "hash_title": "Hash",
+    "compare_title": "Compare",
+    "your_string": "Your string:",
+    "your_string_placeholder": "Enter your string...",
+    "your_hash": "Your hash:",
+    "your_hash_placeholder": "Enter your hash...",
+    "salt_count": "Salt count:",
+    "copy_hash": "Copy hash",
+    "do_they_match": "Do they Match ?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "uuid_generator": {
+    "version": "UUID Version",
+    "quantity": "Quantity",
+    "namespace": "Namespace",
+    "name": "Name",
+    "name_placeholder": "Enter name...",
+    "copied_button": "Copied!",
+    "copy_button": "Copy",
+    "refresh_button": "Regenerate"
+  },
+  "ulid_generator": {
+    "quantity": "Quantity",
+    "format": "Format",
+    "copied_button": "Copied!",
+    "copy_button": "Copy",
+    "refresh_button": "Regenerate"
+  },
+  "encryption": {
+    "your_text": "Your text:",
+    "your_text_placeholder": "The string to cipher",
+    "your_secret_key": "Your secret key:",
+    "your_secret_key_placeholder": "Enter your secret key...",
+    "encryption_algorithm": "Encryption algorithm:",
+    "decryption_algorithm": "Decryption algorithm:",
+    "your_text_encrypted": "Your encrypted text:",
+    "your_text_decrypted": "Your decrypted text:"
+  },
+  "bip39_generator": {
+    "title": "BIP39 passphrase generator",
+    "input_language": "Language",
+    "entropy": "Entropy (seed)",
+    "entropy_placeholder": "Your entropy...",
+    "passphrase": "Passphrase (mnemonic)",
+    "passphrase_placeholder": "Your mnemonic..."
+  },
+  "hmac_generator": {
+    "plain_text": "Plain text to compute the hash",
+    "plain_text_placeholder": "Enter your plain text...",
+    "secret_key": "Secret key:",
+    "secret_key_placeholder": "Enter your secret key...",
+    "hash_algorithm": "Hash function:",
+    "output_encoding": "Output encoding",
+    "generated_hmac": "HMAC of your text",
+    "copy_hmac": "Copy HMAC"
+  },
+  "rsa_key_pair_generator": {
+    "bits": "Bits",
+    "public_key": "Public Key",
+    "private_key": "Private Key",
+    "refresh_key_pair": "Refresh Key Pair",
+    "copied_to_clipboard": "Copied"
+  },
+  "password_strength": {
+    "enter_your_password": "Enter your password...",
+    "crack_time_estimation": "Estimated password crack time",
+    "crack_time_estimation_note": "Estimated time assumes a hacker can try 1 billion passwords per second. Actual time may vary depending on attack methods.",
+    "note": "Note",
+    "password_length": "Password length",
+    "entropy": "Complexity (entropy)",
+    "character_set_size": "Character set size",
+    "score": "Security score",
+    "instant": "Almost instantly",
+    "less_than_a_second": "Less than a second",
+    "millennia": "millennia",
+    "centuries": "centuries",
+    "decades": "decades",
+    "years": "years",
+    "months": "months",
+    "weeks": "weeks",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds"
+  },
+  "date_time_converter": {
+    "enter_date_time_placeholder": "Enter date and time...",
+    "js_locale_date_string": "JS locale date string",
+    "iso_8601": "ISO 8601",
+    "iso_9075": "ISO 9075",
+    "rfc_3339": "RFC 3339",
+    "rfc_7231": "RFC 7231",
+    "unix_timestamp": "Unix timestamp",
+    "timestamp": "Timestamp",
+    "utc_format": "UTC format",
+    "mongo_object_id": "Mongo ObjectID",
+    "excel_date_time": "Excel date/time"
+  },
+  "integer_base_converter": {
+    "input_number": "Input number",
+    "input_base": "Input base",
+    "custom": "Custom"
+  }
+}

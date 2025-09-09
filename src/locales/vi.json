@@ -1,0 +1,390 @@
+{
+  "common": {
+    "copied_button": "Đã sao chép!",
+    "remove_duplicate": "Loại bỏ trùng lặp",
+    "input_placeholder": "Nhập nội dung...",
+    "loading": "Đang tải dữ liệu...",
+    "error_fetching_data": "Chưa thể lấy dữ liệu"
+  },
+  "home": {
+    "title_card": "Bạn thích max-tools?",
+    "description_card": "Hãy bắt đầu sử dụng ngay những công cụ dưới đây để công việc của bạn đạt hiệu quả tối đa!",
+    "usage_statistics": "Thống kê sử dụng"
+  },
+  "header": {
+    "search": "Tìm kiếm",
+    "search_placeholder": "Nhập từ khóa tìm kiếm..."
+  },
+  "sidebar": {
+    "title": "MAX - TOOLS",
+    "favorite": "Công cụ yêu thích của bạn",
+    "tools": {
+      "facebook": {
+        "category": "Facebook",
+        "check_live_uid": {
+          "title": "Kiểm tra UID Facebook",
+          "description": "Kiểm tra xem UID Facebook có đang hoạt động hay không."
+        },
+        "filter_data_from_content": {
+          "title": "Lọc số điện thoại và nhóm Zalo",
+          "description": "Lọc số điện thoại và nhóm Zalo từ nội dung"
+        },
+        "get_otp_2fa": {
+          "title": "Lấy mã otp từ 2FA",
+          "description": "Lấy mã xác thực hai yếu tố của bạn một cách dễ dàng"
+        },
+        "find_id_facebook": {
+          "title": "Tìm ID Facebook",
+          "description": "Tìm ID Facebook từ tên người dùng hoặc URL trang cá nhân"
+        },
+        "scan_facebook_group_by_keyword": {
+          "title": "Quét nhóm theo từ khóa",
+          "description": "Quét các nhóm Facebook dựa trên từ khóa bạn cung cấp."
+        },
+        "icon_facebook": {
+          "title": "Biểu tượng cảm xúc",
+          "description": "Lấy biểu tượng cảm xúc."
+        },
+        "scan_post_by_keyword": {
+          "title": "Quét bài viết theo từ khóa",
+          "description": "Quét các bài viết trên Facebook dựa trên từ khóa bạn cung cấp."
+        }
+      },
+      "string_processing_tool": {
+        "category": "Công cụ xử lý chuỗi",
+        "split_string": {
+          "title": "Tách chuỗi",
+          "description": "Tách một chuỗi thành nhiều phần dựa trên dấu phân cách."
+        },
+        "join_string": {
+          "title": "Ghép chuỗi 1",
+          "description": "Gộp nhiều chuỗi thành một chuỗi duy nhất."
+        },
+        "join_string_two": {
+          "title": "Ghép chuỗi 2",
+          "description": "Gộp nhiều chuỗi thành một chuỗi duy nhất với dấu phân cách tùy chỉnh."
+        },
+        "remove_duplicate": {
+          "title": "Lọc trùng lặp",
+          "description": "Lọc các chuỗi trùng lặp khỏi danh sách."
+        }
+      },
+      "crypto": {
+        "category": "Mã hóa",
+        "token_generator": {
+          "title": "Trình tạo mã thông báo",
+          "description": "Tạo chuỗi ngẫu nhiên với các ký tự bạn muốn: chữ hoa, chữ thường, số và/hoặc ký hiệu."
+        },
+        "hash_text": {
+          "title": "Mã hóa văn bản",
+          "description": "Mã hóa một chuỗi văn bản bằng cách sử dụng các hàm bạn cần: MD5, SHA1, SHA256, SHA224, SHA512, SHA384, SHA3 hoặc RIPEMD160"
+        },
+        "bcrypt": {
+          "title": "Bcrypt",
+          "description": "Mã hóa và so sánh chuỗi văn bản sử dụng bcrypt. Bcrypt là một hàm mã hóa mật khẩu dựa trên thuật toán Blowfish."
+        },
+        "uuid_generator": {
+          "title": "Trình tạo UUID",
+          "description": "Một UUID (Universally Unique Identifier) là một số 128 bit được sử dụng để xác định thông tin trong hệ thống máy tính. Số lượng UUID có thể có là 16^32, tương đương với 2^128 hoặc khoảng 3.4x10^38 (rất lớn!)."
+        },
+        "ulid_generator": {
+          "title": "Tạo ULID",
+          "description": "Tạo ngẫu nhiên mã định danh duy nhất có thể sắp xếp theo thứ tự từ điển (ULID)."
+        },
+        "encryption": {
+          "title": "Mã hóa / giải mã văn bản",
+          "description": "Mã hóa và giải mã văn bản rõ bằng cách sử dụng thuật toán mã hóa như AES, TripleDES, Rabbit hoặc RC4."
+        },
+        "bip39_generator": {
+          "title": "Trình tạo BIP39 passphrase",
+          "description": "Tạo BIP39 passphrase từ mnemonic hiện có hoặc ngẫu nhiên, hoặc lấy mnemonic từ passphrase."
+        },
+        "hmac_generator": {
+          "title": "Máy tạo HMAC",
+          "description": "Tính toán mã xác thực thông điệp dựa trên hàm băm (HMAC) bằng khóa bí mật và hàm băm yêu thích của bạn."
+        },
+        "rsa_key_pair_generator": {
+          "title": "Trình tạo cặp khóa RSA",
+          "description": "Tạo cặp khóa chứng chỉ pem RSA riêng tư và công khai ngẫu nhiên mới."
+        },
+        "password_strength_analyser": {
+          "title": "Bộ phân tích độ mạnh mật khẩu",
+          "description": "Khám phá độ mạnh của mật khẩu của bạn với công cụ phân tích độ mạnh mật khẩu chỉ chạy trên phía máy khách và ước tính thời gian phá mật khẩu."
+        },
+        "pdf_signature_checker": {
+          "title": "Kiểm tra chữ ký PDF",
+          "description": "Xác minh chữ ký của một tệp PDF. Một tệp PDF đã được ký có chứa một hoặc nhiều chữ ký có thể được sử dụng để xác định xem nội dung của tệp đã được thay đổi kể từ khi tệp được ký."
+        }
+      },
+      "converter": {
+        "category": "Chuyển đổi",
+        "date_time": {
+          "title": "Chuyển đổi ngày-tháng",
+          "description": "Chuyển đổi ngày và giờ sang nhiều định dạng khác nhau"
+        },
+        "integer_base": {
+          "title": "Chuyển đổi cơ số số nguyên",
+          "description": "Chuyển đổi số giữa các cơ số khác nhau (thập phân, thập lục phân, nhị phân, bát phân, base64, ...)"
+        }
+      }
+    }
+  },
+  "check_live_uid": {
+    "input_title": "Nhập danh sách Uid",
+    "input_placeholder": "Nhập UID, mỗi dòng một UID",
+    "checking": "Đang kiểm tra...",
+    "check_live_uid": "Kiểm tra UID hoạt động",
+    "live_uid": "UID hoạt động",
+    "die_uid": "UID không hoạt động",
+    "copy_live_uid": "Sao chép UID hoạt động",
+    "copy_die_uid": "Sao chép UID không hoạt động"
+  },
+  "filter_data": {
+    "input_title": "Nhập vào dữ liệu để tìm kiếm:",
+    "input_placeholder": "Nhập nội dung để lọc...",
+    "checking": "Đang lọc...",
+    "button_check_phone_zalo": "Click để tìm số điện thoại và nhóm Zalo",
+    "no_content": "Chưa có nội dung để lọc",
+    "found_phones": "Tìm thấy {{count}} số điện thoại",
+    "found_zalo_groups": "Tìm thấy {{count}} nhóm Zalo",
+    "phone_list": "Danh sách số điện thoại",
+    "zalo_group_list": "Danh sách nhóm Zalo",
+    "copy_phone": "Sao chép số điện thoại",
+    "copy_zalo_group": "Sao chép nhóm Zalo",
+    "phone_copied": "Đã sao chép số điện thoại!",
+    "zalo_group_copied": "Đã sao chép nhóm Zalo!"
+  },
+  "get_otp_from_2fa": {
+    "input_label": "<span class='font-bold'>* Mã bí mật 2FA</span> Lấy mã xác thực hai yếu tố dễ dàng - Vui lòng lưu trữ mã bí mật của bạn an toàn",
+    "input_placeholder": "Nhập mã bí mật 2FA, mỗi dòng một mã...",
+    "button_generate_otp": "Lấy mã OTP",
+    "output_label": "<span class='font-bold'>* Mã 2FA</span> Mã xác thực hai bước",
+    "copied_to_clipboard": "Đã sao chép"
+  },
+  "find_id_facebook": {
+    "title": "Công cụ miễn phí giúp bạn dễ dàng lấy UID Facebook một cách dễ dàng.",
+    "link_label": "Đường dẫn facebook:",
+    "link_placeholder": "Nhập đường dẫn facebook cần lấy ID",
+    "button_get_id": "Lấy ID",
+    "get_id_success": "Lấy ID thành công!",
+    "get_id_error": "Không tìm thấy ID hoặc link không hợp lệ!"
+  },
+  "scan_facebook_group": {
+    "cookie": "Cookie (Hệ thống cam kết không lưu lại cookie của người dùng)",
+    "cookie_guide": "Hướng dẫn lấy cookie facebook",
+    "proxy": "Proxy",
+    "keyword": "Từ khóa",
+    "limit": "Giới hạn nhóm",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "groups": "Nhóm",
+    "link_group": "Liên kết nhóm",
+    "id_group": "ID nhóm",
+    "name_group": "Tên nhóm",
+    "member_group": "Thành viên",
+    "privacy_group": "Quyền riêng tư",
+    "description_group": "Mô tả",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_groups_found": "Tổng số nhóm đã tìm thấy"
+  },
+  "scan_post_by_keyword": {
+    "cookie": "Cookie (Hệ thống cam kết không lưu lại cookie của người dùng)",
+    "cookie_guide": "Hướng dẫn lấy cookie facebook",
+    "proxy": "Proxy",
+    "keyword": "Từ khóa",
+    "limit": "Giới hạn bài viết",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "post": "Bài viết",
+    "link_post": "Liên kết bài viết",
+    "id_post": "ID bài viết",
+    "content_post": "Nội dung bài viết",
+    "creation_time_post": "Thời gian tạo",
+    "image_post": "Hình ảnh",
+    "description_post": "Mô tả",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_posts_found": "Tổng số bài viết đã tìm thấy",
+    "view_image": "Xem ảnh"
+  },
+  "string_processing_tool": {
+    "input_title": "Nhập vào chuỗi cần xử lý",
+    "input_placeholder": "noidung1|noidung2|noidung3",
+    "separator": "Ngăn cách bởi ký tự:",
+    "start_cut": "Bắt đầu cắt:",
+    "end_cut": "Đến cụm:",
+    "button_split": "Bắt đầu Cắt",
+    "output_title": "Kết quả",
+    "input_required": "Vui lòng nhập chuỗi cần xử lý!"
+  },
+  "join_string": {
+    "input_title": "Nhập vào chuỗi cần ghép",
+    "input_placeholder": "noidung1|noidung2|noidung3",
+    "start_join": "Chuỗi ghép vào đầu dòng:",
+    "start_join_placeholder": "Bắt đầu|",
+    "end_join": "Chuỗi ghép vào cuối dòng:",
+    "end_join_placeholder": "|Kết thúc",
+    "button_join": "Bắt đầu Ghép",
+    "output_title": "Kết quả"
+  },
+  "join_string_two": {
+    "input_title_1": "Nhập vào chuỗi cần ghép 1",
+    "input_title_2": "Nhập vào chuỗi cần ghép 2",
+    "content_separator": "Nội dung ngăn cách 2 dòng:",
+    "content_separator_placeholder": "Nhập nội dung ngăn cách...",
+    "button_join": "Bắt đầu Ghép",
+    "output_title": "Kết quả"
+  },
+  "remove_duplicate": {
+    "input_title": "Nhập vào chuỗi cần lọc trùng lặp",
+    "option": "Tùy chọn:",
+    "export_filtered_list": "Xuất danh sách đã lọc trùng lặp",
+    "export_duplicate_list": "Xuất danh sách trùng",
+    "export_non_duplicate_list": "Xuất danh sách không trùng",
+    "button_remove_duplicate": "Bắt đầu Lọc",
+    "output_title": "Kết quả"
+  },
+  "icon_facebook": {
+    "title": "Tìm kiếm biểu tượng Facebook:",
+    "selected": "Biểu tượng Facebook đã chọn:",
+    "activities": "Hoạt động",
+    "symbols": "Ký hiệu",
+    "flags": "cờ",
+    "travel & places": "Du lịch & Địa điểm",
+    "food & drink": "Thức ăn & Đồ uống",
+    "animals & nature": "Động vật & Thiên nhiên",
+    "people & body": "Cơ thể & Con người",
+    "objects": "Đối tượng",
+    "component": "Các thành phần",
+    "smileys & emotion": "Biểu cảm & Cảm xúc"
+  },
+  "token_generator": {
+    "length": "Độ dài",
+    "include_uppercase": "Chữ hoa (A-Z)",
+    "include_lowercase": "Chữ thường (a-z)",
+    "include_numbers": "Số (0-9)",
+    "include_symbols": "Ký hiệu (!@#$...)",
+    "copied_button": "Đã sao chép!",
+    "copy_button": "Sao chép",
+    "refresh_button": "Tạo lại"
+  },
+  "hash_text": {
+    "input_title": "Nhập văn bản để băm:",
+    "input_placeholder": "Chuỗi văn bản cần băm...",
+    "digest_encoding": "Mã hóa kết quả"
+  },
+  "bcrypt": {
+    "hash_title": "Băm",
+    "compare_title": "So sánh",
+    "your_string": "Chuỗi của bạn:",
+    "your_string_placeholder": "Nhập chuỗi của bạn...",
+    "your_hash": "Hash của bạn:",
+    "your_hash_placeholder": "Nhập hash của bạn...",
+    "salt_count": "Số lần salt:",
+    "copy_hash": "Sao chép hash",
+    "do_they_match": "Có khớp không?",
+    "yes": "Đúng",
+    "no": "Sai"
+  },
+  "uuid_generator": {
+    "version": "Phiên bản UUID",
+    "quantity": "Số lượng",
+    "namespace": "Namespace",
+    "name": "Tên",
+    "name_placeholder": "Nhập tên...",
+    "copied_button": "Đã sao chép!",
+    "copy_button": "Sao chép",
+    "refresh_button": "Tạo lại"
+  },
+  "ulid_generator": {
+    "quantity": "Số lượng",
+    "format": "Định dạng",
+    "copied_button": "Đã sao chép!",
+    "copy_button": "Sao chép",
+    "refresh_button": "Tạo lại"
+  },
+  "encryption": {
+    "your_text": "Văn bản của bạn:",
+    "your_text_placeholder": "Chuỗi cần mã hóa",
+    "your_secret_key": "Khóa bí mật của bạn:",
+    "your_secret_key_placeholder": "Nhập khóa bí mật...",
+    "encryption_algorithm": "Thuật toán mã hóa:",
+    "decryption_algorithm": "Thuật toán giải mã:",
+    "your_text_encrypted": "Văn bản đã mã hóa:",
+    "your_text_decrypted": "Văn bản đã giải mã:"
+  },
+  "bip39_generator": {
+    "title": "BIP39 passphrase generator",
+    "input_language": "Language",
+    "entropy": "Entropy (seed)",
+    "entropy_placeholder": "Your entropy...",
+    "passphrase": "Passphrase (mnemonic)",
+    "passphrase_placeholder": "Your mnemonic...",
+    "entropy_error": "Entropy length should be >= 16, <= 32 and be a multiple of 4",
+    "entropy_hex_error": "Entropy should be an hexadecimal string",
+    "mnemonic_invalid_error": "Invalid mnemonic",
+    "entropy_invalid_error": "Invalid entropy"
+  },
+  "hmac_generator": {
+    "plain_text": "Văn bản cần tạo mã xác thực",
+    "plain_text_placeholder": "Nhập văn bản của bạn...",
+    "secret_key": "Khóa bí mật:",
+    "secret_key_placeholder": "Nhập khóa bí mật của bạn...",
+    "hash_algorithm": "Hàm băm:",
+    "output_encoding": "Kiểu mã hóa kết quả",
+    "generated_hmac": "HMAC của văn bản",
+    "copy_hmac": "Sao chép HMAC"
+  },
+  "rsa_key_pair_generator": {
+    "bits": "Số bit",
+    "public_key": "Khóa công khai",
+    "private_key": "Khóa riêng",
+    "refresh_key_pair": "Tạo lại cặp khóa",
+    "copied_to_clipboard": "Đã sao chép"
+  },
+  "password_strength": {
+    "enter_your_password": "Nhập mật khẩu của bạn...",
+    "crack_time_estimation": "Ước tính thời gian bị phá mật khẩu",
+    "crack_time_estimation_note": "Thời gian ước tính dựa trên giả định hacker có thể thử 1 tỷ mật khẩu mỗi giây. Thực tế có thể khác tùy vào phương pháp tấn công.",
+    "note": "Lưu ý",
+    "password_length": "Độ dài mật khẩu",
+    "entropy": "Độ phức tạp (entropy)",
+    "character_set_size": "Số lượng ký tự sử dụng",
+    "score": "Điểm bảo mật",
+    "instant": "Gần như ngay lập tức",
+    "less_than_a_second": "Dưới 1 giây",
+    "millennia": "thiên niên kỷ",
+    "centuries": "thế kỷ",
+    "decades": "thập kỷ",
+    "years": "năm",
+    "months": "tháng",
+    "weeks": "tuần",
+    "days": "ngày",
+    "hours": "giờ",
+    "minutes": "phút",
+    "seconds": "giây"
+  },
+  "date_time_converter": {
+    "enter_date_time_placeholder": "Nhập ngày giờ...",
+    "js_locale_date_string": "Chuỗi ngày giờ theo định dạng JS",
+    "iso_8601": "ISO 8601",
+    "iso_9075": "ISO 9075",
+    "rfc_3339": "RFC 3339",
+    "rfc_7231": "RFC 7231",
+    "unix_timestamp": "Dấu thời gian Unix",
+    "timestamp": "Dấu thời gian",
+    "utc_format": "Định dạng UTC",
+    "mongo_object_id": "Mongo ObjectID",
+    "excel_date_time": "Ngày/giờ Excel"
+  },
+  "integer_base_converter": {
+    "input_number": "Số đầu vào",
+    "input_base": "Cơ số đầu vào",
+    "custom": "Tùy chỉnh"
+  }
+}

@@ -1,12 +1,40 @@
 import { useState, useEffect } from 'react';
+import Fuse from 'fuse.js';
+import { toolCategories } from '../utils/constants/toolCategories';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-interface SearchModalProps {
+const SearchModal = ({
+  isOpen,
+  onClose,
+}: {
   isOpen: boolean;
   onClose: () => void;
-}
-
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
+}) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [results, setResults] = useState<typeof allTools>([]);
+  const { t } = useTranslation();
+  const allTools = toolCategories.flatMap((cat) =>
+    cat.items.map((item) => ({
+      ...item,
+      category: t(cat.title),
+      label: t(item.label),
+      description: t(item.description),
+    }))
+  );
+
+  const fuse = new Fuse(allTools, {
+    keys: ['label', 'description', 'category'],
+    threshold: 0.3,
+    ignoreLocation: true,
+  });
+
+  const handleNavigateTool = (path: string) => {
+    navigate(path);
+    setSearchQuery('');
+    onClose();
+  };
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -26,32 +54,72 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const searchResults = fuse.search(searchQuery).map((res) => res.item);
+      setResults(searchResults);
+    } else {
+      setResults([]);
+    }
+  }, [searchQuery]);
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-start justify-center pt-20"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-20"
       onClick={onClose}
     >
+      {/* Overlay mờ */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+      {/* Box modal */}
       <div
-        className="bg-white backdrop-blur-md border border-gray-200 rounded-xl shadow-2xl w-full max-w-2xl mx-4 p-2"
+        className="relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl w-full max-w-2xl mx-4 p-2"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative">
+        <div className="relative input-wrapper input-wrapper">
           <input
             type="text"
-            placeholder="Type to search..."
+            placeholder={t('header.search_placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 bg-white backdrop-blur-sm"
+            className="text-sm py-2 px-3 outline-none w-full text-black dark:text-white bg-transparent"
             autoFocus
           />
         </div>
 
-        {searchQuery && (
-          <div className="mt-4 text-sm text-gray-600">
-            Searching for: "{searchQuery}"
-          </div>
+        {/* Hiển thị kết quả */}
+        {results.length > 0 && (
+          <>
+            <ul className="mt-4 divide-y divide-zinc-200 dark:divide-zinc-700">
+              {results.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <li
+                    key={idx}
+                    className="py-2 px-3 hover:bg-green-600 rounded cursor-pointer flex items-center gap-3 group"
+                    onClick={() => {
+                      handleNavigateTool(item.path);
+                    }}
+                  >
+                    {/* Icon */}
+                    <span className="text-xl group-hover:text-white text-zinc-700 dark:text-zinc-300">
+                      <Icon size={25} className={`mr-2`} />
+                    </span>
+                    <div>
+                      <div className="font-medium group-hover:text-white dark:group-hover:text-white">
+                        {t(item.label)}
+                      </div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-white">
+                        {t(item.category)} • {t(item.description)}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </div>
     </div>

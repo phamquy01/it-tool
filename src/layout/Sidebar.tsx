@@ -5,12 +5,17 @@ import {
   FAVORITES_KEY,
   toolCategories,
 } from '../utils/constants/toolCategories';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
-  const [openSections, setOpenSections] = useState<string[]>(['Crypto']);
+  const [openSections, setOpenSections] = useState<string[]>([
+    'sidebar.tools.facebook.category',
+    'sidebar.tools.string_processing_tool.category',
+  ]);
 
   const handleItemClick = (path: string) => {
     navigate(path);
@@ -34,7 +39,7 @@ const Sidebar = () => {
 
       if (favoriteItems.length > 0) {
         const favoritesCategory = {
-          title: 'Favorites',
+          title: 'sidebar.favorite',
           items: favoriteItems,
         };
         setCategories([favoritesCategory, ...toolCategories]);
@@ -58,9 +63,9 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="overflow-hidden relative z-auto h-full w-full bg-white">
+    <div className="overflow-hidden relative z-auto h-full w-full bg-white dark:bg-zinc-800">
       <div
-        className="w-full overflow-y-auto h-full min-h-screen max-h-screen scrollbar-w-none"
+        className="w-full overflow-y-auto h-full min-h-screen max-h-screen scrollbar-w-none custom-scroll"
         style={{ overflowX: 'hidden' }}
       >
         <div className="min-w-full">
@@ -72,7 +77,7 @@ const Sidebar = () => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 275"
-              className="mt-[-65px]"
+              className="mt-[-90px]"
             >
               <defs>
                 <linearGradient
@@ -108,33 +113,31 @@ const Sidebar = () => {
                 d="M0 0v212.5s62.5-12.5 150 25 150 0 150 0V0Z"
               ></path>
             </svg>
-            <div className="absolute left-0 w-full text-center top-4 text-white ">
+            <div className="absolute left-0 w-full text-center top-9 text-white ">
               <div
                 className="text-[25px] font-semibold"
                 onClick={() => navigate('/')}
               >
-                {' '}
-                IT - TOOLS{' '}
+                {t('sidebar.title')}
               </div>
               <div className="w-1/2 h-0.5 rounded  mt-0 mb-1 mx-auto"></div>
-              <div className="text-[16px]">Handy tools for developers</div>
             </div>
           </div>
 
           {/* Navigation - Only scrolls when content is too long */}
-          <div className="pt-[160px] pb-[200px]">
+          <div className="pt-[180px]">
             {categories.map((section) => {
               const isOpen = openSections.includes(section.title);
               return (
                 <div key={section.title}>
                   <div
                     onClick={() => toggleSection(section.title)}
-                    className="flex cursor-pointer items-center mt-[12px] opacity-60 ml-[6px] "
+                    className="flex cursor-pointer items-center mt-[12px] opacity-60 ml-[6px] dark:text-white"
                   >
                     <span
-                      className={` text-[16px] opacity-50  ${
+                      className={`text-[16px] opacity-50 transition-transform duration-300 ease-in-out ${
                         isOpen ? 'rotate-0' : '-rotate-90'
-                      } transition-transform duration-150 ease-in-out`}
+                      }`}
                       style={{ lineHeight: '.25rem' }}
                     >
                       <ChevronDown
@@ -142,44 +145,66 @@ const Sidebar = () => {
                         style={{ lineHeight: '.25rem' }}
                       />
                     </span>
-                    <span className="text-[13px] ml-2">{section.title}</span>
+                    <span className="text-[13px] ml-2">{t(section.title)}</span>
                   </div>
                   <div
-                    className={`w-full ${
-                      isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
-                    }`}
+                    className={`w-full overflow-hidden transition-all duration-300 ease-in-out`}
+                    style={{
+                      maxHeight: isOpen ? 1000 : 0,
+                      opacity: isOpen ? 1 : 0,
+                    }}
                   >
                     <div className="flex">
-                      <div className="w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"></div>
-                      <div className="flex-1 mb-[5px] text-black overflow-hidden text-[14px] pb-[6px]">
+                      <div
+                        className="w-[24px] opacity-10 hover:opacity-100 transition-opacity duration-200 ease-in-out relative cursor-pointer"
+                        onClick={() => toggleSection(section.title)}
+                      >
+                        <div
+                          className={`w-[2px] h-full absolute left-[14px] transform -translate-x-1/2 top-0 transition-opacity duration-200 cursor-pointer ${
+                            isOpen
+                              ? 'bg-gray-500 opacity-80'
+                              : 'bg-gray-200 opacity-50'
+                          }`}
+                        ></div>
+                      </div>
+                      <div className="flex-1 mb-[5px] overflow-hidden text-[14px] pb-[6px]">
                         {section.items.map((item) => {
                           const Icon = item.icon;
                           const isSelected = location.pathname === item.path;
                           return (
-                            <div key={item.label} className="h-[32px] mt-1.5 relative">
+                            <div
+                              key={item.label}
+                              className="h-[32px] mt-1.5 relative"
+                            >
                               <div
                                 onClick={() => handleItemClick(item.path)}
                                 className={`pl-2 h-full flex items-center cursor-pointer relative pr-2 mr-2.5 rounded ${
-                                  isSelected ? 'bg-[#ebf6f0]' : 'hover:bg-gray-100'
+                                  isSelected
+                                    ? 'bg-[#ebf6f0] dark:bg-[#233929]'
+                                    : 'hover:bg-gray-100 dark:hover:bg-zinc-700'
                                 }`}
                                 style={{ minWidth: 0 }}
                               >
-                                <Icon
-                                  size={18}
-                                  className={`mr-2 ${isSelected ? 'text-[#18a058]' : 'text-black'}`}
-                                />
+                                <span className="flex-shrink-0">
+                                  <Icon
+                                    size={18}
+                                    className={`mr-2 ${
+                                      isSelected
+                                        ? 'text-[#18a058]'
+                                        : 'text-black dark:text-white/80'
+                                    }`}
+                                  />
+                                </span>
                                 <span
                                   className={`text-sm ml-1 ${
-                                    isSelected ? 'text-[#18a058]' : 'text-black'
+                                    isSelected
+                                      ? 'text-[#18a058]'
+                                      : 'text-black dark:text-white/80'
                                   }`}
                                   style={{ minWidth: 0 }}
                                 >
-                                  <span
-                                    className="block truncate"
-                                    style={{ maxWidth: '100%' }}
-                                    title={item.label}
-                                  >
-                                    {item.label}
+                                  <span className="block truncate">
+                                    {t(item.label)}
                                   </span>
                                 </span>
                               </div>

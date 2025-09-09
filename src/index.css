@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -10,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark mode support */
+
 .dark {
   color-scheme: dark;
 }
@@ -54,12 +55,9 @@ h1 {
   line-height: 1.1;
 }
 
-
-/* Scrollbar styles for dark mode */
 ::-webkit-scrollbar {
   width: 6px;
 }
-
 
 
 
@@ -70,27 +68,152 @@ h1 {
 .dark ::-webkit-scrollbar-thumb {
   background: #475569;
 }
-
-
 .custom-scroll {
-  overflow-y: auto; /* hoặc overflow-x nếu muốn ngang */
-  cursor: pointer; /* con trỏ khi hover */
+  overflow-y: auto;
 }
 
 .custom-scroll::-webkit-scrollbar {
-  width: 8px; /* độ rộng thanh cuộn */
+  width: 5px;
+  height: 5px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-  background: #f0f0f0; /* nền xám */
+  background: transparent;
+  cursor: pointer;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: #888; /* nút cuộn màu xám */
-  border-radius: 10px; /* bo tròn */
+  background: #d5d5d5;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: #555; /* đậm hơn khi hover */
+  background: #b1b1b1;
+
 }
 
+
+.input-wrapper {
+  @apply flex items-center bg-white dark:bg-[#343434]
+         border border-gray-300 dark:border-zinc-700 
+         rounded w-full;
+
+  /* focus */
+  @apply focus-within:bg-white 
+         dark:focus-within:bg-[#233929] 
+         dark:focus-within:border-green-500;
+}
+
+.textarea-wrapper {
+  @apply flex items-start bg-white dark:bg-zinc-800 
+         border border-gray-300 dark:border-zinc-700 
+         rounded w-full resize-y overflow-hidden;
+
+  /* focus */
+  @apply focus-within:bg-white 
+         dark:focus-within:bg-[#233929] 
+         dark:focus-within:border-green-500;
+}
+
+
+/* Input bên trong input-wrapper */
+.input-wrapper input {
+  @apply w-full py-2 border-none outline-none 
+         text-[14px] font-mono font-normal 
+         bg-transparent;
+}
+
+
+.textarea-wrapper textarea {
+  @apply w-full border-none outline-none 
+         text-[14px] font-mono font-normal 
+         bg-transparent resize-none ;
+  overflow-x: auto;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* Fade in animation for streaming data */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Smooth scrolling for auto-scroll */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #059669 transparent;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #059669;
+  border-radius: 3px;
+  border: none;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #047857;
+}
+
+/* Progress bar animations */
+@keyframes progressGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.2);
+  }
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-glow {
+  animation: progressGlow 2s ease-in-out infinite;
+}
+
+.progress-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 2s ease-in-out infinite;
+}

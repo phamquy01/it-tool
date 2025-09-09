@@ -14,6 +14,7 @@ import {
   portugueseWordList,
   spanishWordList,
 } from '@it-tools/bip39';
+import { useTranslation } from 'react-i18next';
 
 const languages = {
   English: englishWordList,
@@ -31,6 +32,7 @@ const languages = {
 const languageOptions = Object.keys(languages);
 
 const BIP39 = () => {
+  const { t } = useTranslation();
   const [language, setLanguage] = useState<keyof typeof languages>('English');
   const [entropy, setEntropy] = useState<string>(generateEntropy());
   const [mnemonic, setMnemonic] = useState<string>(
@@ -42,10 +44,10 @@ const BIP39 = () => {
   // Validate entropy
   const validateEntropy = (value: string) => {
     if (value.length < 16 || value.length > 32 || value.length % 4 !== 0) {
-      return 'Entropy length should be >= 16, <= 32 and be a multiple of 4';
+      return t('bip39_generator.entropy_error');
     }
     if (!/^[a-fA-F0-9]*$/.test(value)) {
-      return 'Entropy should be an hexadecimal string';
+      return t('bip39_generator.entropy_hex_error');
     }
     return '';
   };
@@ -56,7 +58,7 @@ const BIP39 = () => {
       mnemonicToEntropy(value, languages[language]);
       return '';
     } catch {
-      return 'Invalid mnemonic';
+      return t('bip39_generator.mnemonic_invalid_error');
     }
   };
 
@@ -71,7 +73,7 @@ const BIP39 = () => {
         setMnemonicError('');
       } catch {
         setMnemonic('');
-        setMnemonicError('Invalid entropy');
+        setMnemonicError(t('bip39_generator.mnemonic_invalid_error'));
       }
     } else {
       setMnemonic('');
@@ -89,7 +91,7 @@ const BIP39 = () => {
         setEntropyError('');
       } catch {
         setEntropy('');
-        setEntropyError('Invalid mnemonic');
+        setEntropyError(t('bip39_generator.mnemonic_invalid_error'));
       }
     } else {
       setEntropy('');
@@ -105,7 +107,7 @@ const BIP39 = () => {
       setMnemonicError('');
     } catch {
       setMnemonic('');
-      setMnemonicError('Invalid entropy for this language');
+      setMnemonicError(t('bip39_generator.entropy_invalid_error'));
     }
   };
 
@@ -124,14 +126,18 @@ const BIP39 = () => {
   };
 
   return (
-    <div className="max-w-[600px] mx-auto bg-white rounded shadow-md px-6 py-5">
-      <h2 className="text-xl font-bold mb-4">BIP39 Passphrase Generator</h2>
+    <div className="max-w-[600px] mx-auto bg-white dark:bg-zinc-900 rounded shadow-md px-6 py-5">
+      <h2 className="text-xl font-bold mb-4 text-zinc-900 dark:text-zinc-100">
+        {t('bip39_generator.title')}
+      </h2>
       <div className="flex flex-col w-full mb-4">
-        <label className="mb-[5px] text-left pr-3 text-[14px]">Language</label>
+        <label className="mb-[5px] text-left pr-3 text-[14px] text-zinc-800 dark:text-zinc-200">
+          Language
+        </label>
         <select
           value={language}
           onChange={handleLanguageChange}
-          className="border border-gray-300 rounded px-3 py-2 text-[14px] outline-none bg-white w-full"
+          className="border border-zinc-300 dark:border-zinc-700 rounded px-3 py-2 text-[14px] outline-none bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 w-full"
         >
           {languageOptions.map((lang) => (
             <option key={lang} value={lang}>
@@ -141,19 +147,19 @@ const BIP39 = () => {
         </select>
       </div>
       <div className="flex flex-col w-full mb-4">
-        <label className="mb-[5px] text-left pr-3 text-[14px]">
-          Entropy (seed)
+        <label className="mb-[5px] text-left pr-3 text-[14px] text-zinc-800 dark:text-zinc-200">
+          {t('bip39_generator.entropy')}
         </label>
-        <div className="flex w-full gap-2">
+        <div className="input-wrapper flex w-full gap-2">
           <input
             value={entropy}
             onChange={(e) => handleEntropyChange(e.target.value)}
-            className="flex-1 border border-gray-300 rounded leading-[34px] text-[14px] outline-none px-3 py-2 bg-white"
-            placeholder="Your entropy..."
+            className="flex-1 border border-zinc-300 dark:border-zinc-700 rounded leading-[34px] text-[14px] outline-none px-3 py-2 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+            placeholder={t('bip39_generator.entropy_placeholder')}
           />
           <button
             onClick={handleRefreshEntropy}
-            className="w-[34px] h-[34px] rounded-full border border-transparent bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            className="w-[34px] h-[34px] rounded-full border border-transparent bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 flex items-center justify-center transition-all duration-200 cursor-pointer"
             title="Refresh"
           >
             <span role="img" aria-label="refresh">
@@ -162,7 +168,7 @@ const BIP39 = () => {
           </button>
           <button
             onClick={() => handleCopy(entropy)}
-            className="w-[34px] h-[34px] rounded-full border border-transparent bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            className="w-[34px] h-[34px] rounded-full border border-transparent bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 flex items-center justify-center transition-all duration-200 cursor-pointer"
             title="Copy"
           >
             <span role="img" aria-label="copy">
@@ -175,19 +181,19 @@ const BIP39 = () => {
         )}
       </div>
       <div className="flex flex-col w-full mb-4">
-        <label className="mb-[5px] text-left pr-3 text-[14px]">
-          Passphrase (mnemonic)
+        <label className="mb-[5px] text-left pr-3 text-[14px] text-zinc-800 dark:text-zinc-200">
+          {t('bip39_generator.passphrase')}
         </label>
-        <div className="flex w-full gap-2">
+        <div className="input-wrapper flex w-full gap-2">
           <input
             value={mnemonic}
             onChange={(e) => handleMnemonicChange(e.target.value)}
-            className="flex-1 border border-gray-300 rounded leading-[34px] text-[14px] outline-none px-3 py-2 bg-white"
-            placeholder="Your mnemonic..."
+            className="flex-1 border border-zinc-300 dark:border-zinc-700 rounded leading-[34px] text-[14px] outline-none px-3 py-2 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+            placeholder={t('bip39_generator.passphrase_placeholder')}
           />
           <button
             onClick={() => handleCopy(mnemonic)}
-            className="w-[34px] h-[34px] rounded-full border border-transparent bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            className="w-[34px] h-[34px] rounded-full border border-transparent bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 flex items-center justify-center transition-all duration-200 cursor-pointer"
             title="Copy"
           >
             <span role="img" aria-label="copy">

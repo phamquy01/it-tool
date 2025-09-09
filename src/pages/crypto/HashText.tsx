@@ -1,4 +1,4 @@
-import LanguageSelector from '../components/LanguageSelector';
+import LanguageSelector from '../../components/Selector';
 import { Copy } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -13,6 +13,8 @@ import {
   enc,
   lib,
 } from 'crypto-js';
+import Input from '../../components/Input';
+import { useTranslation } from 'react-i18next';
 
 type Encoding = 'Bin' | 'Hex' | 'Base64' | 'Base64url';
 type AlgoNames =
@@ -38,6 +40,7 @@ const algoFns: Record<AlgoNames, (text: string) => lib.WordArray> = {
 
 const HashText = () => {
   const [currentEncode, setCurrentEncode] = useState('Hex');
+  const { t } = useTranslation();
   const dataEncode = [
     { label: 'Binary (base 2)', value: 'Bin' },
     { label: 'Hexadecimal (base 16)', value: 'Hex' },
@@ -107,15 +110,15 @@ const HashText = () => {
 
   return (
     <>
-      <div className="max-w-[600px] mx-auto bg-white rounded shadow-md px-6 py-5">
+      <div className="max-w-[600px] mx-auto bg-white dark:bg-zinc-900 rounded shadow-md px-6 py-5">
         <div className="flex flex-col w-full">
-          <label className="mb-[5px] text-left pr-3 text-[14px]">
-            Your text to hash:
+          <label className="mb-[5px] text-left pr-3 text-[14px] text-black dark:text-zinc-200">
+            {t('hash_text.input_title')}
           </label>
-          <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center">
+          <div className="input-wrapper resize-y overflow-hidden pr-1 pl-3 border border-gray-300 dark:border-zinc-700 rounded flex items-center bg-white dark:bg-zinc-800">
             <textarea
-              className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none"
-              placeholder="Your string to hash..."
+              className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none bg-white dark:bg-zinc-800 text-black dark:text-zinc-200"
+              placeholder={t('hash_text.input_placeholder')}
               value={clearText}
               onChange={(e) => setClearText(e.target.value)}
               style={{
@@ -135,10 +138,10 @@ const HashText = () => {
             />
           </div>
         </div>
-        <div className="relative flex w-full text-black my-6 h-[1px]"></div>
+        <div className="relative flex w-full my-6 h-[1px] bg-gray-200 dark:bg-zinc-700"></div>
         <div className="flex flex-col w-full mb-4">
-          <label className="mb-[5px] text-left pr-3 text-[14px]">
-            Digest encoding
+          <label className="mb-[5px] text-left pr-3 text-[14px] text-black dark:text-zinc-200">
+            {t('hash_text.digest_encoding')}
           </label>
           <LanguageSelector
             data={dataEncode}
@@ -153,25 +156,22 @@ const HashText = () => {
             <div className="flex w-full ">
               <div
                 style={{ flex: '0 0 120px' }}
-                className="px-3 bg-gray-100 text-[14px] border border-gray-200 rounded leading-[34px]"
+                className="px-3 bg-gray-100 dark:bg-zinc-800 text-[14px] border border-gray-200 dark:border-zinc-700 rounded leading-[34px] text-black dark:text-zinc-200"
               >
                 {algo}
               </div>
-              <div className="flex items-center gap-2 px-3 bg-white border border-gray-300 rounded leading-[34px] w-full">
-                <input
-                  type="text"
-                  className="flex-1 border-gray-300 rounded leading-[34px] text-[14px] outline-none"
-                  value={hashResults[algo]}
-                  readOnly
-                />
-
-                <div
-                  className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
-                  onClick={() => handleCopy(hashResults[algo])}
-                >
-                  <Copy size={14} />
-                </div>
-              </div>
+              <Input
+                type="text"
+                className="flex-1 border-gray-300 dark:border-zinc-700 rounded leading-[34px] text-[14px] outline-none bg-white dark:bg-zinc-800 text-black dark:text-zinc-200"
+                value={hashResults[algo]}
+                readOnly
+                actions={[
+                  {
+                    icon: <Copy size={14} />,
+                    onClick: () => handleCopy(hashResults[algo]),
+                  },
+                ]}
+              />
             </div>
           </div>
         ))}

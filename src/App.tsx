@@ -3,11 +3,13 @@ import MainLayout from './layout/MainLayout';
 
 import { toolCategories } from './utils/constants/toolCategories';
 import Home from './pages/Home';
+import Admin from './pages/admin/Admin';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/admin" element={<Admin />} />
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           {/* map over toolCategories to create routes */}

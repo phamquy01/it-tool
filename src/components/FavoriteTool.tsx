@@ -16,10 +16,8 @@ const FavoriteTool = ({ tool }: { tool: { path: string } }) => {
       }
     };
 
-    // Load lần đầu
     loadFavorites();
 
-    // Listen cho custom event khi favorites thay đổi
     const handleFavoritesChange = () => {
       loadFavorites();
     };
@@ -57,12 +55,11 @@ const FavoriteTool = ({ tool }: { tool: { path: string } }) => {
     <>
       <button
         onClick={(e) => toggleFavorite(tool.path, e)}
-        className={`p-2 rounded-full transition-all duration-200  ${
+        className={`p-2 rounded-full transition-all duration-200 cursor-pointer ${
           favorites.includes(tool.path)
-            ? 'hover:bg-green-100 text-green-500'
-            : ' text-gray-400 hover:bg-gray-200'
+            ? 'hover:bg-green-100 text-green-500 dark:hover:bg-[#233929]'
+            : ' text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700'
         }
-      
       `}
       >
         <Heart

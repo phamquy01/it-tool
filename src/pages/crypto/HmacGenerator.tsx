@@ -10,16 +10,19 @@ import {
   HmacSHA512,
   enc,
 } from 'crypto-js';
-import LanguageSelector from '../components/LanguageSelector';
+import LanguageSelector from '../../components/Selector';
 import { Copy, X } from 'lucide-react';
+import { useToast } from '../../store/ToastContext';
+import { useTranslation } from 'react-i18next';
 
 const HmacGenerator = () => {
+  const { t } = useTranslation();
   const [plainText, setPlainText] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [hashFunc, setHashFunc] = useState('SHA256');
   const [hmac, setHmac] = useState('');
-  const [toast, setToast] = useState('');
   const [currentEncode, setCurrentEncode] = useState('Hex');
+  const { showToast } = useToast();
   const algos = {
     MD5: HmacMD5,
     RIPEMD160: HmacRIPEMD160,
@@ -67,21 +70,20 @@ const HmacGenerator = () => {
   const handleCopy = () => {
     if (hmac) {
       navigator.clipboard.writeText(hmac);
-      setToast('Đã copy HMAC!');
-      setTimeout(() => setToast(''), 2000);
+      showToast('Đã copy HMAC!');
     }
   };
 
   return (
     <div className="max-w-[600px] mx-auto">
-      <div className="flex flex-col w-full mb-4 text-black">
+      <div className="flex flex-col w-full mb-4 text-black dark:text-white">
         <label className="mb-[5px] text-left pr-3 text-[14px]">
-          Plain text to compute the hash
+          {t('hmac_generator.plain_text')}
         </label>
-        <div className="resize-y overflow-hidden pr-1 pl-3 border border-gray-300 rounded flex items-center bg-white hover:border-green-600 ">
+        <div className="resize-y overflow-hidden pr-1 pl-3 border border-zinc-300 rounded flex items-center bg-white dark:bg-zinc-900 hover:border-green-600 input-wrapper">
           <textarea
-            className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-normal"
-            placeholder="plan text to the compouter the hash..."
+            className="w-full min-h-[100px] word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-normal bg-white dark:bg-zinc-900 text-black dark:text-white"
+            placeholder={t('hmac_generator.plain_text_placeholder')}
             value={plainText}
             onChange={(e) => setPlainText(e.target.value)}
             rows={1}
@@ -94,20 +96,20 @@ const HmacGenerator = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col w-full mb-4 text-black">
+      <div className="flex flex-col w-full mb-4 text-black dark:text-white">
         <label className="mb-[5px] text-left pr-3 text-[14px]">
-          Secret key
+          {t('hmac_generator.secret_key')}
         </label>
-        <div className="flex items-center gap-2 px-3 bg-white border border-gray-300 rounded w-full">
+        <div className="flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full input-wrapper">
           <input
             type="text"
-            className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal"
+            className="w-full word-break whitespace-pre-wrap border-none outline-none text-[14px] py-2 resize-none font-mono font-normal bg-white dark:bg-zinc-900 text-black dark:text-white"
             value={secretKey}
             onChange={(e) => setSecretKey(e.target.value)}
           />
 
           <div
-            className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
+            className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-zinc-200 dark:hover:bg-zinc-800 active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500"
             onClick={() => {
               setSecretKey('');
             }}
@@ -116,10 +118,10 @@ const HmacGenerator = () => {
           </div>
         </div>
       </div>
-      <div className="mb-4 flex gap-4 text-black">
+      <div className="mb-4 flex gap-4 text-black dark:text-white">
         <div className="flex-1">
           <label className="mb-[5px] text-sm pr-3 text-left w-full block">
-            Hash function
+            {t('hmac_generator.hash_algorithm')}
           </label>
           <LanguageSelector
             data={Object.keys(algos).map((key) => ({ label: key, value: key }))}
@@ -130,7 +132,7 @@ const HmacGenerator = () => {
         </div>
         <div className="flex-1">
           <label className="mb-[5px] text-sm pr-3 text-left w-full block">
-            Output encoding
+            {t('hmac_generator.output_encoding')}
           </label>
           <LanguageSelector
             data={dataEncode}
@@ -140,19 +142,19 @@ const HmacGenerator = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col w-full mb-4 text-black">
+      <div className="flex flex-col w-full mb-4 text-black dark:text-white">
         <label className="mb-[5px] text-left pr-3 text-[14px]">
-          HMAC of your text
+          {t('hmac_generator.generated_hmac')}
         </label>
-        <div className="flex items-center gap-2 px-3 bg-white border border-gray-300 rounded leading-[34px] w-full mb-4">
+        <div className="flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded leading-[34px] w-full mb-4 input-wrapper">
           <input
             type="text"
-            className="flex-1 border-gray-300 rounded leading-[34px] text-[14px] outline-none"
+            className="flex-1 border-zinc-300 rounded leading-[34px] text-[14px] outline-none bg-white dark:bg-zinc-900 text-black dark:text-white"
             value={hmac}
             readOnly
           />
 
-          <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-gray-200  active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500">
+          <div className="w-[34px] h-[34px] rounded-full border-1 border-transparent hover:bg-zinc-200 dark:hover:bg-zinc-800 active:border-green-500 flex items-center justify-center transition-all duration-200 cursor-pointer focus:border-green-500">
             <Copy size={14} />
           </div>
         </div>
@@ -160,44 +162,11 @@ const HmacGenerator = () => {
       <div className="flex justify-center items-center gap-3">
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all duration-200 text-sm cursor-pointer "
+          className="flex items-center gap-2 px-4 py-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-all duration-200 text-sm cursor-pointer "
         >
-          Copy Hmac
+          {t('hmac_generator.copy_hmac')}
         </button>
       </div>
-
-      {/* Toast notification */}
-      {toast && (
-        <div
-          style={{
-            position: 'fixed',
-            left: '50%',
-            bottom: '40px',
-            transform: 'translateX(-50%)',
-            zIndex: 50,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-          }}
-          className="bg-white text-black px-5 py-2 rounded flex items-center gap-2"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="10" cy="10" r="10" fill="#22c55e" />
-            <path
-              d="M6 10l2.5 2.5L14 7"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span style={{ fontSize: 14 }}>{toast}</span>
-        </div>
-      )}
     </div>
   );
 };
