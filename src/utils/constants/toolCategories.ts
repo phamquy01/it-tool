@@ -23,6 +23,7 @@ import {
   SmilePlus,
   Split,
   UserRoundSearch,
+  UsersRound,
 } from 'lucide-react';
 // import TokenGenerator from '../../pages/crypto/TokenGenerator';
 // import HashText from '../../pages/crypto/HashText';
@@ -48,6 +49,7 @@ import RemoveDuplicate from '../../pages/string-process-tool/RemoveDuplicate';
 import IconFacebook from '../../pages/facebook/IconFacebook';
 import ScanFbGroupByKeyword from '../../pages/facebook/ScanFbGroupByKeyword';
 import ScanPostByKeyword from '../../pages/facebook/ScanPostByKeyword';
+import ScanGroupMembers from '../../pages/facebook/ScanGroupMembers';
 
 export interface ToolItem {
   component: React.FC;
@@ -118,6 +120,13 @@ export const toolCategories: ToolCategory[] = [
         path: '/scan-post-by-keyword',
         description: 'sidebar.tools.facebook.scan_post_by_keyword.description',
         component: ScanPostByKeyword,
+      },
+      {
+        label: 'sidebar.tools.facebook.scan_group_members.title',
+        icon: UsersRound,
+        path: '/scan-group-members',
+        description: 'sidebar.tools.facebook.scan_group_members.description',
+        component: ScanGroupMembers,
       },
     ],
   },

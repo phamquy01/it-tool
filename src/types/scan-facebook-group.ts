@@ -1,4 +1,5 @@
 export type ApiScanFacebookGroupResponse<T> = {
+  fbdtsg?: string; // token để xác thực các request tiếp theo
   cursor?: string; // con trỏ để phân trang
   data?: T; // dữ liệu trả về
   error?: string; // lỗi nếu có

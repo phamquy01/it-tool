@@ -1,36 +1,35 @@
 import { useEffect, useState } from 'react';
-import http from '../../services/http';
 import { useToast } from '../../store/ToastContext';
-import {
-  GROUP_PRIVACY,
-  type GroupKeywordData,
-  type ScanGroupKeywordResponse,
-} from '../../types/scan-facebook-group';
 import { useTranslation } from 'react-i18next';
-import * as XLSX from 'xlsx';
-import { trackUsage } from '../../utils/helpers/TrackUsage';
 import Preview from '../../components/preview';
+import type {
+  GroupMembersData,
+  ScanGroupMembersResponse,
+} from '../../types/scan-group-members';
+import { trackUsage } from '../../utils/helpers/TrackUsage';
+import http from '../../services/http';
+import * as XLSX from 'xlsx';
 import { debounce } from 'lodash';
 import { EXPIRE_TIME } from '../../utils/constants/facebook-tool';
 
-const ScanFbGroupByKeyword = () => {
+const ScanGroupMembers = () => {
   const [cookie, setCookie] = useState('');
   const [proxy, setProxy] = useState('');
-  const [keyword, setKeyword] = useState('');
+  const [groupId, setGroupId] = useState('');
   const [limit, setLimit] = useState<number | string>(10);
-  const [dataScanFacebookGroup, setDataScanFacebookGroup] = useState<
-    GroupKeywordData[] | null
+  const [dataScanGroupMembers, setDataScanGroupMembers] = useState<
+    GroupMembersData[] | null
   >(null);
-  const [allFetchedGroups, setAllFetchedGroups] = useState<GroupKeywordData[]>(
-    []
-  );
+  const [allFetchedGroupMembers, setAllFetchedGroupMembers] = useState<
+    GroupMembersData[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [lastCursor, setLastCursor] = useState('');
   const [lastFbdtsg, setLastFbdtsg] = useState('');
   const [lastSearchParams, setLastSearchParams] = useState<{
     cookie: string;
     proxy: string;
-    keyword: string;
+    groupId: string;
   } | null>(null);
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -38,12 +37,12 @@ const ScanFbGroupByKeyword = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const fetchData = async (cursor: string = '', fbdtsg: string = '') => {
-    const res = await http.post<ScanGroupKeywordResponse>(
-      'https://api.autozalo.com/api/scan_group_keyword',
+    const res = await http.post<ScanGroupMembersResponse>(
+      'https://api.autozalo.com/api/scan_group_member',
       {
         cookie: cookie.trim(),
         proxy: proxy.trim(),
-        keyword: keyword.trim(),
+        groupId: groupId.trim(),
         cursor: cursor.trim(),
         fbdtsg: fbdtsg.trim(),
       }
@@ -58,49 +57,48 @@ const ScanFbGroupByKeyword = () => {
       const currentParams = {
         cookie: cookie.trim(),
         proxy: proxy.trim(),
-        keyword: keyword.trim(),
+        groupId: groupId.trim(),
       };
 
       const isSameSearch =
         lastSearchParams &&
         lastSearchParams.cookie === currentParams.cookie &&
         lastSearchParams.proxy === currentParams.proxy &&
-        lastSearchParams.keyword === currentParams.keyword;
+        lastSearchParams.groupId === currentParams.groupId;
 
-      let allGroups: GroupKeywordData[] = [];
+      let allGroups: GroupMembersData[] = [];
       let cursor = '';
       let fbdtsg = '';
 
-      if (isSameSearch && allFetchedGroups.length > 0) {
-        allGroups = [...allFetchedGroups];
+      if (isSameSearch && allFetchedGroupMembers.length > 0) {
+        allGroups = [...allFetchedGroupMembers];
         cursor = lastCursor;
         fbdtsg = lastFbdtsg;
       } else {
-        setDataScanFacebookGroup([]);
-        setAllFetchedGroups([]);
+        setDataScanGroupMembers([]);
+        setAllFetchedGroupMembers([]);
         setLastCursor('');
         setLastFbdtsg('');
         allGroups = [];
         cursor = '';
-        fbdtsg = '';
       }
 
       const targetLimit = Number(limit);
 
       if (allGroups.length >= targetLimit) {
-        setDataScanFacebookGroup([...allGroups.slice(0, targetLimit)]);
-        showToast('scan_facebook_group.fetch_success', 'success');
+        setDataScanGroupMembers([...allGroups.slice(0, targetLimit)]);
+        showToast('scan_group_members.fetch_success', 'success');
         return;
       }
 
       if (allGroups.length > 0) {
-        setDataScanFacebookGroup([...allGroups]);
+        setDataScanGroupMembers([...allGroups]);
       }
 
       let hasMore = true;
 
       while (hasMore && allGroups.length < targetLimit) {
-        const res = await fetchData(cursor, fbdtsg); // 👈 truyền fbdtsg
+        const res = await fetchData(cursor, fbdtsg);
 
         if (res.data?.error && res.data?.error !== '') {
           showToast('common.error_fetching_data', 'error');
@@ -110,20 +108,23 @@ const ScanFbGroupByKeyword = () => {
         const groups = res.data?.data ?? [];
 
         const uniqueGroups = groups.filter(
-          (newGroup) =>
-            !allGroups.some((existingGroup) => existingGroup.id === newGroup.id)
+          (newGroup: GroupMembersData) =>
+            !allGroups.some(
+              (existingGroup) => existingGroup.uid === newGroup.uid
+            )
         );
 
         allGroups.push(...uniqueGroups);
 
-        setAllFetchedGroups([...allGroups]);
-        setDataScanFacebookGroup([...allGroups.slice(0, targetLimit)]);
+        setAllFetchedGroupMembers([...allGroups]);
+
+        setDataScanGroupMembers([...allGroups.slice(0, targetLimit)]);
 
         cursor = (res.data?.cursor ?? '').trim();
         fbdtsg = (res.data?.fbdtsg ?? '').trim();
 
         setLastCursor(cursor);
-        setLastFbdtsg(fbdtsg); // 👈 lưu lại fbdtsg
+        setLastFbdtsg(fbdtsg);
         setLastSearchParams(currentParams);
 
         await new Promise((resolve) => setTimeout(resolve, 300));
@@ -138,8 +139,8 @@ const ScanFbGroupByKeyword = () => {
         hasMore = !!cursor && allGroups.length < targetLimit;
       }
 
-      trackUsage('Scan Groups by Keyword');
-      showToast('scan_facebook_group.scan_success', 'success');
+      trackUsage('Scan group members');
+      showToast('scan_group_members.scan_success', 'success');
     } catch (err) {
       showToast(`Lỗi: ${String(err)}`, 'error');
     } finally {
@@ -148,20 +149,18 @@ const ScanFbGroupByKeyword = () => {
   };
 
   const handleExportExcel = () => {
-    if (!dataScanFacebookGroup || dataScanFacebookGroup.length === 0) {
+    if (!dataScanGroupMembers || dataScanGroupMembers.length === 0) {
       showToast('Không có dữ liệu để xuất', 'error');
       return;
     }
 
     try {
-      const excelData = dataScanFacebookGroup.map((group, index) => ({
+      const excelData = dataScanGroupMembers.map((member, index) => ({
         STT: index + 1,
-        [t('scan_facebook_group.name_group')]: group.name,
-        [t('scan_facebook_group.link_group')]: group.url,
-        [t('scan_facebook_group.id_group')]: group.id,
-        [t('scan_facebook_group.member_group')]: group.member,
-        [t('scan_facebook_group.privacy_group')]: group.privacy,
-        [t('scan_facebook_group.description_group')]: group.description || '',
+        [t('scan_group_members.content_post')]: member.uid,
+        [t('scan_group_members.link_post')]: member.name,
+        [t('scan_group_members.id_post')]: member.join_status_text,
+        [t('scan_group_members.image_post')]: member.avatar,
       }));
 
       const workbook = XLSX.utils.book_new();
@@ -177,16 +176,16 @@ const ScanFbGroupByKeyword = () => {
         { wch: 30 },
       ];
       worksheet['!cols'] = columnWidths;
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Facebook Groups');
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Posts');
 
       const timestamp = new Date()
         .toLocaleDateString('vi-VN')
         .replace(/\//g, '-');
-      const fileName = `Facebook_Groups_${keyword}_${timestamp}.xlsx`;
+      const fileName = `Group_members_${timestamp}.xlsx`;
 
       XLSX.writeFile(workbook, fileName);
 
-      showToast('scan_facebook_group.export_success', 'success');
+      showToast('scan_group_members.export_success', 'success');
     } catch (error) {
       console.error('Lỗi xuất Excel:', error);
       showToast('Có lỗi xảy ra khi xuất file Excel', 'error');
@@ -198,16 +197,19 @@ const ScanFbGroupByKeyword = () => {
       const stateToSave = {
         cookie,
         proxy,
-        keyword,
+        groupId,
         limit,
         lastCursor,
         lastFbdtsg,
         lastSearchParams,
-        allFetchedGroups: allFetchedGroups || [],
-        data: dataScanFacebookGroup || [],
+        allFetchedGroupMembers: allFetchedGroupMembers,
+        data: dataScanGroupMembers,
         timestamp: Date.now(),
       };
-      localStorage.setItem('scanFbGroupState', JSON.stringify(stateToSave));
+      localStorage.setItem(
+        'scanGroupMembersState',
+        JSON.stringify(stateToSave)
+      );
     }, 500);
 
     saveState();
@@ -216,36 +218,37 @@ const ScanFbGroupByKeyword = () => {
       saveState.cancel();
     };
   }, [
+    allFetchedGroupMembers,
     cookie,
-    proxy,
-    keyword,
-    limit,
-    dataScanFacebookGroup,
+    dataScanGroupMembers,
+    groupId,
     lastCursor,
     lastFbdtsg,
     lastSearchParams,
-    allFetchedGroups,
+    limit,
+    proxy,
   ]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('scanFbGroupState');
+    const saved = localStorage.getItem('scanGroupMembersState');
     if (!saved) return;
     const parsed = saved ? JSON.parse(saved) : {};
     if (Date.now() - parsed.timestamp > EXPIRE_TIME) {
-      localStorage.removeItem('scanFbGroupState');
+      localStorage.removeItem('scanGroupMembersState');
       return;
     }
 
     setCookie(parsed.cookie || '');
     setProxy(parsed.proxy || '');
-    setKeyword(parsed.keyword || '');
+    setGroupId(parsed.groupId || '');
     setLimit(parsed.limit || 10);
     setLastCursor(parsed.lastCursor || '');
     setLastFbdtsg(parsed.lastFbdtsg || '');
     setLastSearchParams(parsed.lastSearchParams || null);
-    setAllFetchedGroups(parsed.allFetchedGroups || []);
-    setDataScanFacebookGroup(parsed.data || []);
+    setAllFetchedGroupMembers(parsed.allFetchedGroupMembers || []);
+    setDataScanGroupMembers(parsed.data || []);
   }, []);
+
   return (
     <div className="min-w-0 w-full overflow-hidden">
       <div className="w-full max-w-full mx-auto bg-slate-50 dark:bg-zinc-800 rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-slate-100 dark:border-slate-800 overflow-hidden">
@@ -258,7 +261,7 @@ const ScanFbGroupByKeyword = () => {
                     loading ? 'opacity-50' : ''
                   }`}
                 >
-                  {t('scan_facebook_group.cookie')}
+                  {t('scan_group_members.cookie')}
                 </label>
                 <label
                   className={`block text-xs font-medium mb-1.5 text-green-700 dark:text-zinc-200 transition-opacity duration-200 cursor-pointer hover:text-green-500 active:scale-95 flex-shrink-0 ml-2`}
@@ -270,7 +273,7 @@ const ScanFbGroupByKeyword = () => {
                     )
                   }
                 >
-                  {t('scan_facebook_group.cookie_guide')}
+                  {t('scan_group_members.cookie_guide')}
                 </label>
               </div>
               <div
@@ -296,7 +299,7 @@ const ScanFbGroupByKeyword = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_facebook_group.proxy')}
+                {t('scan_group_members.proxy')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -323,7 +326,7 @@ const ScanFbGroupByKeyword = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_facebook_group.keyword')}
+                {t('scan_group_members.group_id')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -331,9 +334,9 @@ const ScanFbGroupByKeyword = () => {
                 }`}
               >
                 <input
-                  value={keyword}
+                  value={groupId}
                   onChange={(e) => {
-                    setKeyword(e.target.value);
+                    setGroupId(e.target.value);
                   }}
                   placeholder={t('common.input_placeholder')}
                   className="w-full py-2 text-xs bg-transparent outline-none min-w-0"
@@ -348,7 +351,7 @@ const ScanFbGroupByKeyword = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_facebook_group.limit')}
+                {t('scan_group_members.limit')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -370,14 +373,14 @@ const ScanFbGroupByKeyword = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 lg:flex-row justify-between items-center min-w-0">
+          <div className="flex flex-col gap-2 lg:flex-row justify-between items-center">
             <div className="flex items-center gap-2 w-full">
               <button
                 className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
                 onClick={handleScan}
                 disabled={
                   loading ||
-                  (!cookie.trim() && !keyword.trim() && !proxy.trim())
+                  (!cookie.trim() && !groupId.trim() && !proxy.trim())
                 }
               >
                 {loading && (
@@ -415,8 +418,8 @@ const ScanFbGroupByKeyword = () => {
                 onClick={handleExportExcel}
                 disabled={
                   loading ||
-                  !dataScanFacebookGroup ||
-                  dataScanFacebookGroup.length === 0
+                  !dataScanGroupMembers ||
+                  dataScanGroupMembers.length === 0
                 }
               >
                 <svg
@@ -439,18 +442,19 @@ const ScanFbGroupByKeyword = () => {
               </button>
             </div>
 
-            {dataScanFacebookGroup && dataScanFacebookGroup.length > 0 && (
+            {dataScanGroupMembers && dataScanGroupMembers.length > 0 && (
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-zinc-800 dark:to-zinc-800 rounded-lg p-3 border border-green-200 dark:border-zinc-700 w-full lg:w-auto">
-                <div className="flex items-center justify-between min-w-0">
+                <div className="flex items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-600 rounded-full flex-shrink-0"></div>
                     <div className="text-sm font-semibold text-green-700 dark:text-green-400 truncate">
-                      {t('scan_facebook_group.total_groups_found')} :{' '}
+                      {t('scan_group_members.total_members_found')} :{' '}
                     </div>
-                    <div className="text-sm font-bold text-green-700 dark:text-green-400 w-max">
-                      {dataScanFacebookGroup.length}{' '}
-                      {t('scan_facebook_group.groups')}
-                    </div>
+                    <span className="text-sm font-bold text-green-700 dark:text-green-400 w-max">
+                      {' '}
+                      {dataScanGroupMembers.length}{' '}
+                      {t('scan_group_members.member')}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -462,10 +466,10 @@ const ScanFbGroupByKeyword = () => {
             <div className="space-y-2 min-w-0">
               <div className="flex items-center justify-between min-w-0">
                 <span className="text-sm text-slate-600 dark:text-slate-300 truncate">
-                  {t('scan_facebook_group.scanning')}
+                  {t('scan_group_members.scanning')}
                 </span>
                 <span className="text-sm font-medium text-green-600 dark:text-green-400 flex-shrink-0 ml-2">
-                  {dataScanFacebookGroup?.length || 0}/{limit}
+                  {dataScanGroupMembers?.length || 0}/{limit}
                 </span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-zinc-700 rounded-full h-1.5 min-w-0">
@@ -473,7 +477,7 @@ const ScanFbGroupByKeyword = () => {
                   className="bg-green-600 h-1.5 rounded-full transition-all duration-300 ease-out"
                   style={{
                     width: `${Math.min(
-                      ((dataScanFacebookGroup?.length || 0) / Number(limit)) *
+                      ((dataScanGroupMembers?.length || 0) / Number(limit)) *
                         100,
                       100
                     )}%`,
@@ -487,16 +491,16 @@ const ScanFbGroupByKeyword = () => {
         <div className="mt-4 sm:mt-6 min-w-0 overflow-hidden">
           {/* Mobile & Tablet Card View */}
           <div className="block lg:hidden space-y-3 min-w-0">
-            {!dataScanFacebookGroup || dataScanFacebookGroup.length === 0 ? (
+            {!dataScanGroupMembers || dataScanGroupMembers.length === 0 ? (
               <div className="bg-white dark:bg-zinc-800 rounded-lg p-4 text-center">
                 <span className="text-slate-500 dark:text-slate-300 font-semibold text-sm">
                   {t('common.no_data')}
                 </span>
               </div>
             ) : (
-              dataScanFacebookGroup.map((group, index) => (
+              dataScanGroupMembers.map((member, index) => (
                 <div
-                  key={group.id}
+                  key={member.uid}
                   className="bg-white dark:bg-zinc-800 rounded-lg p-3 border border-slate-200 dark:border-zinc-700 shadow-sm animate-fadeIn min-w-0 overflow-hidden"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
@@ -511,90 +515,45 @@ const ScanFbGroupByKeyword = () => {
                     </div>
                     <div className="min-w-0">
                       <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_facebook_group.name_group')}
+                        {t('scan_group_members.uid_member')}
                       </span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 break-words">
-                        {group.name}
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 break-words whitespace-pre-wrap leading-relaxed line-clamp-2">
+                        {member.uid}
                       </span>
                     </div>
                     <div className="min-w-0">
                       <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_facebook_group.link_group')}
+                        {t('scan_group_members.name_member')}
                       </span>
-                      <a
-                        href={group.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:underline break-all"
-                      >
-                        {group.url}
-                      </a>
+                      <span className="text-xs text-slate-700 dark:text-slate-200 break-all word-break font-semibold">
+                        {member.name}
+                      </span>
                     </div>
                     <div className="min-w-0">
                       <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_facebook_group.id_group')}
+                        {t('scan_group_members.join_status_text')}
                       </span>
-                      <span className="text-xs text-slate-700 dark:text-slate-200 break-all">
-                        {group.id}
+                      <span className="text-xs text-slate-700 dark:text-slate-200 break-all word-break font-semibold">
+                        {member.join_status_text}
                       </span>
                     </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 min-w-0">
-                      <div>
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                          {t('scan_facebook_group.member_group')}
-                        </span>
-                        <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-                          {group.member}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1 px-2">
-                          {t('scan_facebook_group.privacy_group')}
-                        </span>
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            group.privacy === GROUP_PRIVACY.PUBLIC.en ||
-                            group.privacy === GROUP_PRIVACY.PUBLIC.vi
-                              ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                          }`}
-                        >
-                          {group.privacy}
-                        </span>
-                      </div>
-                    </div>
-                    {group.description && (
-                      <div>
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                          {t('scan_facebook_group.description_group')}
-                        </span>
-                        <span className="text-xs text-slate-700 dark:text-slate-200">
-                          {group.description}
-                        </span>
-                      </div>
-                    )}
-                    {group.avatar && (
+                    {member.avatar && (
                       <div className="min-w-0">
                         <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                          Avatar
+                          {t('scan_group_members.avatar_member')}
                         </span>
-                        <div className="flex flex-wrap gap-1 justify-start">
-                          {group.avatar
-                            .split('|')
-                            .map((img: string, imgIndex: number) => (
-                              <img
-                                key={imgIndex}
-                                src={img.trim()}
-                                alt={`Ảnh ${imgIndex + 1}`}
-                                className="w-12 h-12 object-cover rounded border border-slate-200 dark:border-zinc-600 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
-                                onClick={() => {
-                                  setSelectedImage(img.trim());
-                                  setOpen(true);
-                                }}
-                              />
-                            ))}
-                        </div>
+                        <img
+                          src={member.avatar}
+                          alt={t('scan_group_members.avatar_member')}
+                          className="w-12 h-12 object-cover rounded border border-slate-200 dark:border-zinc-600 shadow-sm cursor-pointer"
+                          onClick={() => {
+                            setSelectedImage(member.avatar);
+                            setOpen(true);
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
                       </div>
                     )}
                   </div>
@@ -607,71 +566,74 @@ const ScanFbGroupByKeyword = () => {
               <table className="w-full text-xs">
                 <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-zinc-900">
                   <tr>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-12">
+                    <th className="px-1 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-12">
                       STT
                     </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-left whitespace-nowrap w-80">
-                      {t('scan_facebook_group.link_group')}
+                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-80">
+                      {t('scan_group_members.uid_member')}
                     </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-30">
-                      Avatar
+                    <th className="px-1 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-24">
+                      {t('scan_group_members.name_member')}
                     </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-24">
-                      {t('scan_facebook_group.id_group')}
+                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-30">
+                      {t('scan_group_members.avatar_member')}
                     </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-48">
-                      {t('scan_facebook_group.name_group')}
-                    </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-20">
-                      {t('scan_facebook_group.member_group')}
-                    </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-24">
-                      {t('scan_facebook_group.privacy_group')}
-                    </th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-32">
-                      {t('scan_facebook_group.description_group')}
+                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-48">
+                      {t('scan_group_members.join_status_text')}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-zinc-700">
-                  {!dataScanFacebookGroup ||
-                  dataScanFacebookGroup.length === 0 ? (
+                  {!dataScanGroupMembers ||
+                  dataScanGroupMembers.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={8}
+                        colSpan={7}
                         className="px-3 py-6 text-center text-slate-500 dark:text-slate-300 bg-white dark:bg-zinc-800 font-semibold text-sm"
                       >
                         {t('common.no_data')}
                       </td>
                     </tr>
                   ) : (
-                    dataScanFacebookGroup.map((group, index) => (
+                    dataScanGroupMembers.map((member, index) => (
                       <tr
-                        key={group.id}
+                        key={member.uid}
                         className="hover:bg-green-50 dark:hover:bg-zinc-800 transition-colors duration-200 bg-white dark:bg-zinc-800 cursor-pointer animate-fadeIn"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200 font-medium text-center whitespace-nowrap w-12">
+                        <td className="px-1 py-2 text-slate-700 dark:text-slate-200 font-medium text-center whitespace-nowrap w-12">
                           {index + 1}
                         </td>
-                        <td className="px-3 py-2 text-blue-600 dark:text-blue-400 text-left ">
-                          <a
-                            href={group.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline font-medium inline-block max-w-[300px] truncate"
-                            title={group.url}
+                        <td
+                          className="px-1 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24 font-medium"
+                          onClick={() => {
+                            navigator.clipboard.writeText(member.uid);
+                            showToast('common.copied_button');
+                          }}
+                        >
+                          {member.uid}
+                        </td>
+                        <td
+                          className="px-2 py-2 text-slate-700 dark:text-slate-200 text-center font-medium max-w-[300px]"
+                          onClick={() => {
+                            navigator.clipboard.writeText(member.name);
+                            showToast('common.copied_button');
+                          }}
+                        >
+                          <span
+                            className="block truncate mx-auto"
+                            title={member.name}
                           >
-                            {group.url}
-                          </a>
+                            {member.name}
+                          </span>
                         </td>
                         <td className="px-2 py-2 text-slate-700 dark:text-slate-200 text-center w-30">
-                          {group.avatar ? (
-                            group.avatar && (
+                          {member.avatar ? (
+                            member.avatar && (
                               <div className="flex flex-wrap gap-1 justify-center">
-                                {group.avatar
+                                {member.avatar
                                   .split('|')
-                                  .map((img: string, imgIndex: number) => (
+                                  .map((img, imgIndex) => (
                                     <img
                                       key={imgIndex}
                                       src={img.trim()}
@@ -689,51 +651,8 @@ const ScanFbGroupByKeyword = () => {
                             <span className="text-slate-400">—</span>
                           )}
                         </td>
-                        <td
-                          className="px-3 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24"
-                          onClick={() => {
-                            navigator.clipboard.writeText(group.id);
-                            showToast('common.copied_button');
-                          }}
-                        >
-                          {group.id}
-                        </td>
-                        <td
-                          className="px-3 py-2 text-slate-700 dark:text-slate-200 text-center font-semibold"
-                          onClick={() => {
-                            navigator.clipboard.writeText(group.name);
-                            showToast('common.copied_button');
-                          }}
-                        >
-                          <span
-                            className="block max-w-[300px] truncate mx-auto"
-                            title={group.name}
-                          >
-                            {group.name}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 text-emerald-700 dark:text-emerald-400 text-center whitespace-nowrap w-20 font-medium">
-                          {group.member}
-                        </td>
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24">
-                          <span
-                            className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                              group.privacy === GROUP_PRIVACY.PUBLIC.en ||
-                              group.privacy === GROUP_PRIVACY.PUBLIC.vi
-                                ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                                : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                            }`}
-                          >
-                            {group.privacy}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 text-slate-700 dark:text-slate-200 text-center w-32">
-                          <span
-                            className="block max-w-[120px] truncate mx-auto"
-                            title={group.description}
-                          >
-                            {group.description}
-                          </span>
+                        <td className="px-1 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24 font-medium">
+                          {member.join_status_text}
                         </td>
                       </tr>
                     ))
@@ -757,4 +676,4 @@ const ScanFbGroupByKeyword = () => {
   );
 };
 
-export default ScanFbGroupByKeyword;
+export default ScanGroupMembers;

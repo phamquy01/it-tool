@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import http from '../../services/http';
 import { useToast } from '../../store/ToastContext';
 
@@ -11,6 +11,8 @@ import type {
 } from '../../types/scan-post-by-keyword';
 import { formatDate } from '../../utils/helpers/formatDate';
 import Preview from '../../components/preview';
+import { debounce } from 'lodash';
+import { EXPIRE_TIME } from '../../utils/constants/facebook-tool';
 
 const ScanPostByKeyword = () => {
   const [cookie, setCookie] = useState('');
@@ -23,6 +25,7 @@ const ScanPostByKeyword = () => {
   const [allFetchedPosts, setAllFetchedPosts] = useState<PostKeywordData[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastCursor, setLastCursor] = useState('');
+  const [lastFbdtsg, setLastFbdtsg] = useState('');
   const [lastSearchParams, setLastSearchParams] = useState<{
     cookie: string;
     proxy: string;
@@ -33,7 +36,7 @@ const ScanPostByKeyword = () => {
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const fetchData = async (cursor: string = '') => {
+  const fetchData = async (cursor: string = '', fbdtsg: string = '') => {
     const res = await http.post<ScanPostByKeywordResponse>(
       'https://api.autozalo.com/api/scan_post_keyword',
       {
@@ -41,6 +44,7 @@ const ScanPostByKeyword = () => {
         proxy: proxy.trim(),
         keyword: keyword.trim(),
         cursor: cursor.trim(),
+        fbdtsg: fbdtsg.trim(),
       }
     );
     return res;
@@ -64,14 +68,17 @@ const ScanPostByKeyword = () => {
 
       let allGroups: PostKeywordData[] = [];
       let cursor = '';
+      let fbdtsg = '';
 
       if (isSameSearch && allFetchedPosts.length > 0) {
         allGroups = [...allFetchedPosts];
         cursor = lastCursor;
+        fbdtsg = lastFbdtsg;
       } else {
         setDataScanPostBykeyword([]);
         setAllFetchedPosts([]);
         setLastCursor('');
+        setLastFbdtsg('');
         allGroups = [];
         cursor = '';
       }
@@ -91,7 +98,7 @@ const ScanPostByKeyword = () => {
       let hasMore = true;
 
       while (hasMore && allGroups.length < targetLimit) {
-        const res = await fetchData(cursor);
+        const res = await fetchData(cursor, fbdtsg);
 
         if (res.data?.error && res.data?.error !== '') {
           showToast('common.error_fetching_data', 'error');
@@ -112,7 +119,10 @@ const ScanPostByKeyword = () => {
         setDataScanPostBykeyword([...allGroups.slice(0, targetLimit)]);
 
         cursor = (res.data?.cursor ?? '').trim();
+        fbdtsg = (res.data?.fbdtsg ?? '').trim();
+
         setLastCursor(cursor);
+        setLastFbdtsg(fbdtsg);
         setLastSearchParams(currentParams);
 
         await new Promise((resolve) => setTimeout(resolve, 300));
@@ -180,6 +190,63 @@ const ScanPostByKeyword = () => {
       showToast('Có lỗi xảy ra khi xuất file Excel', 'error');
     }
   };
+
+  useEffect(() => {
+    const saveState = debounce(() => {
+      const stateToSave = {
+        cookie,
+        proxy,
+        keyword,
+        limit,
+        lastCursor,
+        lastFbdtsg,
+        lastSearchParams,
+        allFetchedGroups: allFetchedPosts,
+        data: dataScanPostBykeyword || [],
+        timestamp: Date.now(),
+      };
+      localStorage.setItem(
+        'scanPostByKeywordState',
+        JSON.stringify(stateToSave)
+      );
+    }, 500);
+
+    saveState();
+
+    return () => {
+      saveState.cancel();
+    };
+  }, [
+    cookie,
+    proxy,
+    keyword,
+    limit,
+    dataScanPostBykeyword,
+    lastCursor,
+    lastFbdtsg,
+    lastSearchParams,
+    allFetchedPosts,
+  ]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('scanPostByKeywordState');
+    if (!saved) return;
+    const parsed = saved ? JSON.parse(saved) : {};
+    if (Date.now() - parsed.timestamp > EXPIRE_TIME) {
+      localStorage.removeItem('scanPostByKeywordState');
+      return;
+    }
+
+    setCookie(parsed.cookie || '');
+    setProxy(parsed.proxy || '');
+    setKeyword(parsed.keyword || '');
+    setLimit(parsed.limit || 10);
+    setLastCursor(parsed.lastCursor || '');
+    setLastFbdtsg(parsed.lastFbdtsg || '');
+    setLastSearchParams(parsed.lastSearchParams || null);
+    setAllFetchedPosts(parsed.allFetchedPosts || []);
+    setDataScanPostBykeyword(parsed.data || []);
+  }, []);
 
   return (
     <div className="min-w-0 w-full overflow-hidden">
@@ -305,86 +372,84 @@ const ScanPostByKeyword = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 min-w-0">
-            <div className="lg:col-span-3 min-w-0">
-              <div className="flex items-center gap-2 w-full">
-                <button
-                  className="max-w flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
-                  onClick={handleScan}
-                  disabled={
-                    loading ||
-                    (!cookie.trim() && !keyword.trim() && !proxy.trim())
-                  }
-                >
-                  {loading && (
-                    <svg
-                      className="animate-spin -ml-1 mr-1 h-3 w-3 text-white flex-shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                      />
-                    </svg>
-                  )}
-                  <span className="truncate">
-                    {loading ? (
-                      <>{t('scan_facebook_group.scanning')}</>
-                    ) : (
-                      <>{t('scan_facebook_group.button_scan')}</>
-                    )}
-                  </span>
-                </button>
-                <button
-                  className="max-w flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
-                  onClick={handleExportExcel}
-                  disabled={
-                    loading ||
-                    !dataScanPostBykeyword ||
-                    dataScanPostBykeyword.length === 0
-                  }
-                >
+          <div className="flex flex-col gap-2 lg:flex-row justify-between items-center ">
+            <div className="flex items-center gap-2 w-full">
+              <button
+                className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
+                onClick={handleScan}
+                disabled={
+                  loading ||
+                  (!cookie.trim() && !keyword.trim() && !proxy.trim())
+                }
+              >
+                {loading && (
                   <svg
-                    className="h-3 w-3 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                    className="animate-spin -ml-1 mr-1 h-3 w-3 text-white flex-shrink-0"
                     xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
                   >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                     />
                   </svg>
-                  <span className="truncate">
-                    {t('scan_facebook_group.button_export')}
-                  </span>
-                </button>
-              </div>
+                )}
+                <span className="truncate">
+                  {loading ? (
+                    <>{t('scan_facebook_group.scanning')}</>
+                  ) : (
+                    <>{t('scan_facebook_group.button_scan')}</>
+                  )}
+                </span>
+              </button>
+              <button
+                className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
+                onClick={handleExportExcel}
+                disabled={
+                  loading ||
+                  !dataScanPostBykeyword ||
+                  dataScanPostBykeyword.length === 0
+                }
+              >
+                <svg
+                  className="h-3 w-3 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span className="truncate">
+                  {t('scan_facebook_group.button_export')}
+                </span>
+              </button>
             </div>
 
             {dataScanPostBykeyword && dataScanPostBykeyword.length > 0 && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-zinc-800 dark:to-zinc-800 rounded-lg p-3 border border-green-200 dark:border-zinc-700 w-full lg:max-w">
-                <div className="flex items-center justify-between min-w-0 ">
-                  <div className="flex items-center gap-2 min-w-0">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-zinc-800 dark:to-zinc-800 rounded-lg p-3 border border-green-200 dark:border-zinc-700 w-full lg:w-auto">
+                <div className="flex items-center justify-between min-w-0">
+                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-600 rounded-full flex-shrink-0"></div>
-                    <span className="text-sm font-semibold text-green-700 dark:text-green-400 truncate">
+                    <div className="text-sm font-semibold text-green-700 dark:text-green-400 truncate">
                       {t('scan_post_by_keyword.total_posts_found')} :{' '}
-                    </span>
-                    <span className="text-sm font-bold text-green-700 dark:text-green-400">
+                    </div>
+                    <span className="text-sm font-bold text-green-700 dark:text-green-400 w-max">
                       {' '}
                       {dataScanPostBykeyword.length}{' '}
                       {t('scan_post_by_keyword.post')}

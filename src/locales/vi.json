@@ -48,6 +48,10 @@
         "scan_post_by_keyword": {
           "title": "Quét bài viết theo từ khóa",
           "description": "Quét các bài viết trên Facebook dựa trên từ khóa bạn cung cấp."
+        },
+        "scan_group_members": {
+          "title": "Quét thành viên nhóm",
+          "description": "Quét tất cả thành viên trong một nhóm Facebook."
         }
       },
       "string_processing_tool": {
@@ -211,6 +215,26 @@
     "export_success": "Xuất file Excel thành công!",
     "total_posts_found": "Tổng số bài viết đã tìm thấy",
     "view_image": "Xem ảnh"
+  },
+  "scan_group_members": {
+    "cookie": "Cookie (Hệ thống cam kết không lưu lại cookie của người dùng)",
+    "cookie_guide": "Hướng dẫn lấy cookie facebook",
+    "proxy": "Proxy",
+    "keyword": "Từ khóa",
+    "group_id": "ID nhóm",
+    "limit": "Giới hạn thành viên",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "member": "Thành viên",
+    "uid_member": "UID",
+    "name_member": "Tên",
+    "join_status_text": "Trạng thái tham gia",
+    "avatar_member": "Ảnh đại diện",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_members_found": "Tổng số thành viên đã tìm thấy"
   },
   "string_processing_tool": {
     "input_title": "Nhập vào chuỗi cần xử lý",

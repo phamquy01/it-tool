@@ -49,6 +49,10 @@
         "scan_post_by_keyword": {
           "title": "Scan Post by Keyword",
           "description": "Scan Facebook posts based on the keyword you provide."
+        },
+        "scan_group_members": {
+          "title": "Scan group members",
+          "description": "Scan all members in a Facebook group."
         }
       },
       "string_processing_tool": {
@@ -212,6 +216,26 @@
     "export_success": "Exported Excel file successfully!",
     "total_posts_found": "Total posts found",
     "view_image": "View image"
+  },
+  "scan_group_members": {
+    "cookie": "Cookie (The system guarantees not to store users cookies)",
+    "cookie_guide": "How to get Facebook cookie",
+    "proxy": "Proxy",
+    "keyword": "Keyword",
+    "group_id": "Group ID",
+    "limit": "Member limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "member": "Members",
+    "uid_member": "UID",
+    "name_member": "Name",
+    "join_status_text": "Join Status",
+    "avatar_member": "Avatar",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_members_found": "Total members found"
   },
   "string_processing_tool": {
     "input_title": "Enter the string to process:",

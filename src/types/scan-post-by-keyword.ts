@@ -1,4 +1,5 @@
 export type ApiScanPostByKeywordResponse<T> = {
+  fbdtsg?: string;
   cursor?: string;
   data?: T;
   error?: string;

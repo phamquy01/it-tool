@@ -1,27 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Header from './Header';
 import Sidebar from './Sidebar';
 import ToolLayout from './ToolLayout';
+import { SCREEN_SIZE } from '../utils/constants/main';
 
 const MainLayout = () => {
-  // Auto-hide sidebar on tablet/mobile
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1024px)');
-    const handleResize = () => {
-      if (mq.matches) {
-        setIsSidebarHidden(true);
-      } else {
-        setIsSidebarHidden(false);
-      }
-    };
-    handleResize();
-    mq.addEventListener('change', handleResize);
-    return () => {
-      mq.removeEventListener('change', handleResize);
-    };
-  }, []);
-  const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+  const isMobile =
+    typeof window !== 'undefined'
+      ? window.innerWidth < SCREEN_SIZE.MOBILE
+      : false;
+  const [isSidebarHidden, setIsSidebarHidden] = useState(isMobile);
+
   const toggleSidebar = () => {
     setIsSidebarHidden(!isSidebarHidden);
   };
@@ -47,7 +37,7 @@ const MainLayout = () => {
         </div>
 
         {/* main*/}
-        <main className={`flex-1 transition-all duration-300`}>
+        <main className={`flex-1 transition-all duration-300 overflow-auto`}>
           <Header onToggleSidebar={toggleSidebar} />
           <div
             className="custom-scroll px-6.5"
