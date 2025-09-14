@@ -10,7 +10,9 @@
   "home": {
     "title_card": "Do you like max-tools?",
     "description_card": "Start using the tools below now to maximize your work efficiency!",
-    "usage_statistics": "Usage statistics"
+    "usage_statistics": "Usage statistics",
+    "favorite_tools": "Your favorite tools",
+    "all_tools": "All The Tools"
   },
   "header": {
     "search": "Search",
@@ -53,6 +55,29 @@
         "scan_group_members": {
           "title": "Scan group members",
           "description": "Scan all members in a Facebook group."
+        },
+        "scan_facebook_friends": {
+          "title": "Scan Facebook friends",
+          "description": "Scan all friends from your Facebook account."
+        },
+        "scan_facebook_followers": {
+          "title": "Scan Facebook followers",
+          "description": "Scan all followers from your Facebook account."
+        }
+      },
+      "tiktok": {
+        "category": "TikTok",
+        "scan_tiktok_follower": {
+          "title": "Scan tiktok follower",
+          "description": "Scan the list of users following a TikTok channel."
+        },
+        "scan_tiktok_following": {
+          "title": "Scan tiktok following",
+          "description": "Scan the list of users followed by a TikTok channel."
+        },
+        "scan_tiktok_comment": {
+          "title": "Scan tiktok comment",
+          "description": "Scan the list of comments on a TikTok video."
         }
       },
       "string_processing_tool": {
@@ -236,6 +261,97 @@
     "scan_success": "Scanned successfully",
     "export_success": "Exported Excel file successfully!",
     "total_members_found": "Total members found"
+  },
+  "scan_facebook_friends": {
+    "cookie": "Cookie (The system guarantees not to store users cookies)",
+    "cookie_guide": "How to get Facebook cookie",
+    "proxy": "Proxy",
+    "uid": "User ID",
+    "limit": "Friend limit",
+    "button_scan": "Start",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "friends": "Friends",
+    "avatar_friend": "Avatar",
+    "name_friend": "Friend Name",
+    "fetch_success": "Fetched friends successfully",
+    "scan_success": "Scanned friends successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_friends_found": "Total friends found"
+  },
+  "scan_facebook_follower": {
+    "cookie": "Cookie (The system guarantees not to store users cookies)",
+    "cookie_guide": "How to get Facebook cookie",
+    "proxy": "Proxy",
+    "uid": "User ID",
+    "limit": "Follower limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "followers": "Followers",
+    "avatar_follower": "Avatar",
+    "name_follower": "Follower Name",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_followers_found": "Total followers found"
+  },
+  "scan_tiktok_follower": {
+    "user": "TikTok user",
+    "limit": "User limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "users": "Users",
+    "user_id": "User ID",
+    "user_nickname": "Name",
+    "user_username": "Username",
+    "user_video_count": "Number of videos posted",
+    "follower_count": "Number of followers",
+    "following_count": "Number of users followed",
+    "friend_count": "Number of friends",
+    "heart_count": "Total likes",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_users_found": "Total users found"
+  },
+  "scan_tiktok_following": {
+    "user": "TikTok user",
+    "limit": "User limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "users": "Users",
+    "user_id": "User ID",
+    "user_nickname": "Name",
+    "user_username": "Username",
+    "user_video_count": "Number of videos posted",
+    "follower_count": "Number of followers",
+    "following_count": "Number of users followed",
+    "friend_count": "Number of friends",
+    "heart_count": "Total likes",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_users_found": "Total users found"
+  },
+  "scan_tiktok_comment": {
+    "video_id": "Video ID",
+    "limit": "Comment limit",
+    "button_scan": "Start scan",
+    "scanning": "Scanning...",
+    "button_export": "Export to Excel",
+    "comments": "Comments",
+    "comment_time": "Comment time",
+    "comment_id": "Comment ID",
+    "comment_name": "Comment name",
+    "comment_text": "Comment content",
+    "comment_username": "Comment username",
+    "fetch_success": "Fetched successfully",
+    "scan_success": "Scanned successfully",
+    "export_success": "Exported Excel file successfully!",
+    "total_comments_found": "Total comments found"
   },
   "string_processing_tool": {
     "input_title": "Enter the string to process:",

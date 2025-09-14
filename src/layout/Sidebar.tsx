@@ -14,12 +14,13 @@ const Sidebar = () => {
 
   const [openSections, setOpenSections] = useState<string[]>([
     'sidebar.tools.facebook.category',
-    'sidebar.tools.string_processing_tool.category',
+    'sidebar.tools.tiktok.category',
   ]);
 
   const handleItemClick = (path: string) => {
     navigate(path);
   };
+
   const toggleSection = (title: string) => {
     setOpenSections((prev) =>
       prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]

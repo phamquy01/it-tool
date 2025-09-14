@@ -4,7 +4,7 @@ import Input from '../../components/Input';
 import { Copy, Delete, X } from 'lucide-react';
 import { useToast } from '../../store/ToastContext';
 import { useTranslation } from 'react-i18next';
-import type { Emoji } from '../../types/icon-facebook';
+import type { Emoji } from '../../types/facebook/icon-facebook';
 import { trackUsage } from '../../utils/helpers/TrackUsage';
 
 const groupedEmojis = (() => {

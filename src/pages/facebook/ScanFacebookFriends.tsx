@@ -1,35 +1,36 @@
 import { useEffect, useState } from 'react';
-import { useToast } from '../../store/ToastContext';
-import { useTranslation } from 'react-i18next';
-import Preview from '../../components/preview';
-import type {
-  GroupMembersData,
-  ScanGroupMembersResponse,
-} from '../../types/facebook/scan-group-members';
-import { trackUsage } from '../../utils/helpers/TrackUsage';
 import http from '../../services/http';
+import { useToast } from '../../store/ToastContext';
+
+import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
+import { trackUsage } from '../../utils/helpers/TrackUsage';
+import Preview from '../../components/preview';
 import { debounce } from 'lodash';
 import { EXPIRE_TIME } from '../../utils/constants/facebook-tool';
+import type {
+  FacebookFriendsData,
+  ScanFacebookFriendsResponse,
+} from '../../types/facebook/scan-facebook-friend';
 
-const ScanGroupMembers = () => {
+const ScanFacebookFriends = () => {
   const [cookie, setCookie] = useState('');
   const [proxy, setProxy] = useState('');
-  const [groupId, setGroupId] = useState('');
+  const [uid, setUid] = useState('');
   const [limit, setLimit] = useState<number | string>(10);
-  const [dataScanGroupMembers, setDataScanGroupMembers] = useState<
-    GroupMembersData[] | null
+  const [dataScanFacebookFriends, setDataScanFacebookFriends] = useState<
+    FacebookFriendsData[] | null
   >(null);
-  const [allFetchedGroupMembers, setAllFetchedGroupMembers] = useState<
-    GroupMembersData[]
-  >([]);
+  const [allFetchedPosts, setAllFetchedPosts] = useState<FacebookFriendsData[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
   const [lastCursor, setLastCursor] = useState('');
   const [lastFbdtsg, setLastFbdtsg] = useState('');
   const [lastSearchParams, setLastSearchParams] = useState<{
     cookie: string;
     proxy: string;
-    groupId: string;
+    uid: string;
   } | null>(null);
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -37,12 +38,12 @@ const ScanGroupMembers = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const fetchData = async (cursor: string = '', fbdtsg: string = '') => {
-    const res = await http.post<ScanGroupMembersResponse>(
-      'https://api.autozalo.com/api/scan_group_member',
+    const res = await http.post<ScanFacebookFriendsResponse>(
+      'https://api.autozalo.com/api/scan_facebook_friend',
       {
         cookie: cookie.trim(),
         proxy: proxy.trim(),
-        groupId: groupId.trim(),
+        uid: uid.trim(),
         cursor: cursor.trim(),
         fbdtsg: fbdtsg.trim(),
       }
@@ -57,26 +58,26 @@ const ScanGroupMembers = () => {
       const currentParams = {
         cookie: cookie.trim(),
         proxy: proxy.trim(),
-        groupId: groupId.trim(),
+        uid: uid.trim(),
       };
 
       const isSameSearch =
         lastSearchParams &&
         lastSearchParams.cookie === currentParams.cookie &&
         lastSearchParams.proxy === currentParams.proxy &&
-        lastSearchParams.groupId === currentParams.groupId;
+        lastSearchParams.uid === currentParams.uid;
 
-      let allGroups: GroupMembersData[] = [];
+      let allGroups: FacebookFriendsData[] = [];
       let cursor = '';
       let fbdtsg = '';
 
-      if (isSameSearch && allFetchedGroupMembers.length > 0) {
-        allGroups = [...allFetchedGroupMembers];
+      if (isSameSearch && allFetchedPosts.length > 0) {
+        allGroups = [...allFetchedPosts];
         cursor = lastCursor;
         fbdtsg = lastFbdtsg;
       } else {
-        setDataScanGroupMembers([]);
-        setAllFetchedGroupMembers([]);
+        setDataScanFacebookFriends([]);
+        setAllFetchedPosts([]);
         setLastCursor('');
         setLastFbdtsg('');
         allGroups = [];
@@ -86,13 +87,13 @@ const ScanGroupMembers = () => {
       const targetLimit = Number(limit);
 
       if (allGroups.length >= targetLimit) {
-        setDataScanGroupMembers([...allGroups.slice(0, targetLimit)]);
-        showToast('scan_group_members.fetch_success', 'success');
+        setDataScanFacebookFriends([...allGroups.slice(0, targetLimit)]);
+        showToast('scan_facebook_friends.fetch_success', 'success');
         return;
       }
 
       if (allGroups.length > 0) {
-        setDataScanGroupMembers([...allGroups]);
+        setDataScanFacebookFriends([...allGroups]);
       }
 
       let hasMore = true;
@@ -108,17 +109,15 @@ const ScanGroupMembers = () => {
         const groups = res.data?.data ?? [];
 
         const uniqueGroups = groups.filter(
-          (newGroup: GroupMembersData) =>
-            !allGroups.some(
-              (existingGroup) => existingGroup.uid === newGroup.uid
-            )
+          (newGroup) =>
+            !allGroups.some((existingGroup) => existingGroup.id === newGroup.id)
         );
 
         allGroups.push(...uniqueGroups);
 
-        setAllFetchedGroupMembers([...allGroups]);
+        setAllFetchedPosts([...allGroups]);
 
-        setDataScanGroupMembers([...allGroups.slice(0, targetLimit)]);
+        setDataScanFacebookFriends([...allGroups.slice(0, targetLimit)]);
 
         cursor = (res.data?.cursor ?? '').trim();
         fbdtsg = (res.data?.fbdtsg ?? '').trim();
@@ -139,8 +138,8 @@ const ScanGroupMembers = () => {
         hasMore = !!cursor && allGroups.length < targetLimit;
       }
 
-      trackUsage('Scan group members');
-      showToast('scan_group_members.scan_success', 'success');
+      trackUsage('Scan Post by Keyword');
+      showToast('scan_facebook_friends.scan_success', 'success');
     } catch (err) {
       showToast(`Lỗi: ${String(err)}`, 'error');
     } finally {
@@ -149,19 +148,15 @@ const ScanGroupMembers = () => {
   };
 
   const handleExportExcel = () => {
-    if (!dataScanGroupMembers || dataScanGroupMembers.length === 0) {
-      showToast('Không có dữ liệu để xuất', 'error');
-      return;
-    }
-
     try {
-      const excelData = dataScanGroupMembers.map((member, index) => ({
-        STT: index + 1,
-        [t('scan_group_members.content_post')]: member.uid,
-        [t('scan_group_members.link_post')]: member.name,
-        [t('scan_group_members.id_post')]: member.join_status_text,
-        [t('scan_group_members.image_post')]: member.avatar,
-      }));
+      const excelData = dataScanFacebookFriends
+        ? dataScanFacebookFriends.map((post, index) => ({
+            STT: index + 1,
+            [t('scan_facebook_friends.avatar_friend')]: post.avatar,
+            [t('scan_facebook_friends.uid')]: post.id,
+            [t('scan_facebook_friends.name_friend')]: post.name,
+          }))
+        : [];
 
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -181,11 +176,11 @@ const ScanGroupMembers = () => {
       const timestamp = new Date()
         .toLocaleDateString('vi-VN')
         .replace(/\//g, '-');
-      const fileName = `Group_members_${timestamp}.xlsx`;
+      const fileName = `Facebook_friend_${timestamp}.xlsx`;
 
       XLSX.writeFile(workbook, fileName);
 
-      showToast('scan_group_members.export_success', 'success');
+      showToast('scan_facebook_friends.export_success', 'success');
     } catch (error) {
       console.error('Lỗi xuất Excel:', error);
       showToast('Có lỗi xảy ra khi xuất file Excel', 'error');
@@ -197,17 +192,17 @@ const ScanGroupMembers = () => {
       const stateToSave = {
         cookie,
         proxy,
-        groupId,
+        uid,
         limit,
         lastCursor,
         lastFbdtsg,
         lastSearchParams,
-        allFetchedGroupMembers: allFetchedGroupMembers,
-        data: dataScanGroupMembers,
+        allFetchedGroups: allFetchedPosts,
+        data: dataScanFacebookFriends || [],
         timestamp: Date.now(),
       };
       localStorage.setItem(
-        'scanGroupMembersState',
+        'scanFacebookFriendsState',
         JSON.stringify(stateToSave)
       );
     }, 500);
@@ -218,35 +213,35 @@ const ScanGroupMembers = () => {
       saveState.cancel();
     };
   }, [
-    allFetchedGroupMembers,
     cookie,
-    dataScanGroupMembers,
-    groupId,
+    proxy,
+    uid,
+    limit,
+    dataScanFacebookFriends,
     lastCursor,
     lastFbdtsg,
     lastSearchParams,
-    limit,
-    proxy,
+    allFetchedPosts,
   ]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('scanGroupMembersState');
+    const saved = localStorage.getItem('scanFacebookFriendsState');
     if (!saved) return;
     const parsed = saved ? JSON.parse(saved) : {};
     if (Date.now() - parsed.timestamp > EXPIRE_TIME) {
-      localStorage.removeItem('scanGroupMembersState');
+      localStorage.removeItem('scanFacebookFriendsState');
       return;
     }
 
     setCookie(parsed.cookie || '');
     setProxy(parsed.proxy || '');
-    setGroupId(parsed.groupId || '');
+    setUid(parsed.uid || '');
     setLimit(parsed.limit || 10);
     setLastCursor(parsed.lastCursor || '');
     setLastFbdtsg(parsed.lastFbdtsg || '');
     setLastSearchParams(parsed.lastSearchParams || null);
-    setAllFetchedGroupMembers(parsed.allFetchedGroupMembers || []);
-    setDataScanGroupMembers(parsed.data || []);
+    setAllFetchedPosts(parsed.allFetchedPosts || []);
+    setDataScanFacebookFriends(parsed.data || []);
   }, []);
 
   return (
@@ -261,7 +256,7 @@ const ScanGroupMembers = () => {
                     loading ? 'opacity-50' : ''
                   }`}
                 >
-                  {t('scan_group_members.cookie')}
+                  {t('scan_facebook_friends.cookie')}
                 </label>
                 <label
                   className={`block text-xs font-medium mb-1.5 text-green-700 dark:text-zinc-200 transition-opacity duration-200 cursor-pointer hover:text-green-500 active:scale-95 flex-shrink-0 ml-2`}
@@ -273,7 +268,7 @@ const ScanGroupMembers = () => {
                     )
                   }
                 >
-                  {t('scan_group_members.cookie_guide')}
+                  {t('scan_facebook_friends.cookie_guide')}
                 </label>
               </div>
               <div
@@ -299,7 +294,7 @@ const ScanGroupMembers = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_group_members.proxy')}
+                {t('scan_facebook_friends.proxy')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -326,7 +321,7 @@ const ScanGroupMembers = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_group_members.group_id')}
+                {t('scan_facebook_friends.uid')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -334,9 +329,9 @@ const ScanGroupMembers = () => {
                 }`}
               >
                 <input
-                  value={groupId}
+                  value={uid}
                   onChange={(e) => {
-                    setGroupId(e.target.value);
+                    setUid(e.target.value);
                   }}
                   placeholder={t('common.input_placeholder')}
                   className="w-full py-2 text-xs bg-transparent outline-none min-w-0"
@@ -351,7 +346,7 @@ const ScanGroupMembers = () => {
                   loading ? 'opacity-50' : ''
                 }`}
               >
-                {t('scan_group_members.limit')}
+                {t('scan_facebook_friends.limit')}
               </label>
               <div
                 className={`flex items-center gap-2 px-3 bg-white dark:bg-zinc-900 border border-zinc-300 rounded w-full min-w-0 transition-opacity duration-200 ${
@@ -373,14 +368,13 @@ const ScanGroupMembers = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 lg:flex-row justify-between items-center">
+          <div className="flex flex-col gap-2 lg:flex-row justify-between items-center ">
             <div className="flex items-center gap-2 w-full">
               <button
                 className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-3 py-2 rounded-md shadow-sm cursor-pointer transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-xs font-medium min-w-0"
                 onClick={handleScan}
                 disabled={
-                  loading ||
-                  (!cookie.trim() && !groupId.trim() && !proxy.trim())
+                  loading || (!cookie.trim() && !uid.trim() && !proxy.trim())
                 }
               >
                 {loading && (
@@ -418,8 +412,8 @@ const ScanGroupMembers = () => {
                 onClick={handleExportExcel}
                 disabled={
                   loading ||
-                  !dataScanGroupMembers ||
-                  dataScanGroupMembers.length === 0
+                  !dataScanFacebookFriends ||
+                  dataScanFacebookFriends.length === 0
                 }
               >
                 <svg
@@ -442,18 +436,18 @@ const ScanGroupMembers = () => {
               </button>
             </div>
 
-            {dataScanGroupMembers && dataScanGroupMembers.length > 0 && (
+            {dataScanFacebookFriends && dataScanFacebookFriends.length > 0 && (
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-zinc-800 dark:to-zinc-800 rounded-lg p-3 border border-green-200 dark:border-zinc-700 w-full lg:w-auto">
-                <div className="flex items-center">
+                <div className="flex items-center justify-between min-w-0">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-600 rounded-full flex-shrink-0"></div>
                     <div className="text-sm font-semibold text-green-700 dark:text-green-400 truncate">
-                      {t('scan_group_members.total_members_found')} :{' '}
+                      {t('scan_facebook_friends.total_friends_found')} :{' '}
                     </div>
                     <span className="text-sm font-bold text-green-700 dark:text-green-400 w-max">
                       {' '}
-                      {dataScanGroupMembers.length}{' '}
-                      {t('scan_group_members.member')}
+                      {dataScanFacebookFriends.length}{' '}
+                      {t('scan_facebook_friends.friends')}
                     </span>
                   </div>
                 </div>
@@ -466,10 +460,10 @@ const ScanGroupMembers = () => {
             <div className="space-y-2 min-w-0">
               <div className="flex items-center justify-between min-w-0">
                 <span className="text-sm text-slate-600 dark:text-slate-300 truncate">
-                  {t('scan_group_members.scanning')}
+                  {t('scan_facebook_friends.scanning')}
                 </span>
                 <span className="text-sm font-medium text-green-600 dark:text-green-400 flex-shrink-0 ml-2">
-                  {dataScanGroupMembers?.length || 0}/{limit}
+                  {dataScanFacebookFriends?.length || 0}/{limit}
                 </span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-zinc-700 rounded-full h-1.5 min-w-0">
@@ -477,7 +471,7 @@ const ScanGroupMembers = () => {
                   className="bg-green-600 h-1.5 rounded-full transition-all duration-300 ease-out"
                   style={{
                     width: `${Math.min(
-                      ((dataScanGroupMembers?.length || 0) / Number(limit)) *
+                      ((dataScanFacebookFriends?.length || 0) / Number(limit)) *
                         100,
                       100
                     )}%`,
@@ -489,178 +483,74 @@ const ScanGroupMembers = () => {
         </div>
 
         <div className="mt-4 sm:mt-6 min-w-0 overflow-hidden">
-          {/* Mobile & Tablet Card View */}
-          <div className="block lg:hidden space-y-3 min-w-0">
-            {!dataScanGroupMembers || dataScanGroupMembers.length === 0 ? (
-              <div className="bg-white dark:bg-zinc-800 rounded-lg p-4 text-center">
-                <span className="text-slate-500 dark:text-slate-300 font-semibold text-sm">
-                  {t('common.no_data')}
-                </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            {!dataScanFacebookFriends ||
+            dataScanFacebookFriends.length === 0 ? (
+              <div className="col-span-full text-center text-slate-500 dark:text-slate-300 py-10 text-sm font-medium">
+                {t('common.no_data')}
               </div>
             ) : (
-              dataScanGroupMembers.map((member, index) => (
+              dataScanFacebookFriends.map((friend, index) => (
                 <div
-                  key={member.uid}
-                  className="bg-white dark:bg-zinc-800 rounded-lg p-3 border border-slate-200 dark:border-zinc-700 shadow-sm animate-fadeIn min-w-0 overflow-hidden"
+                  key={friend.id}
+                  className="group bg-white dark:bg-zinc-700 rounded-2xl 
+                   shadow-sm dark:shadow-[0_2px_10px_rgba(0,0,0,0.6)] 
+                   border border-slate-200 dark:border-zinc-600 
+                   p-4 sm:p-5 flex items-center gap-4 
+                   hover:shadow-lg hover:dark:shadow-[0_4px_14px_rgba(0,0,0,0.8)] 
+                   hover:-translate-y-1 transition-all duration-300 ease-out 
+                   animate-fadeIn"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="space-y-2 min-w-0">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                        STT
-                      </span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                        {index + 1}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_group_members.uid_member')}
-                      </span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 break-words whitespace-pre-wrap leading-relaxed line-clamp-2">
-                        {member.uid}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_group_members.name_member')}
-                      </span>
-                      <span className="text-xs text-slate-700 dark:text-slate-200 break-all word-break font-semibold">
-                        {member.name}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                        {t('scan_group_members.join_status_text')}
-                      </span>
-                      <span className="text-xs text-slate-700 dark:text-slate-200 break-all word-break font-semibold">
-                        {member.join_status_text}
-                      </span>
-                    </div>
-                    {member.avatar && (
-                      <div className="min-w-0">
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block mb-1">
-                          {t('scan_group_members.avatar_member')}
-                        </span>
-                        <img
-                          src={member.avatar}
-                          alt={t('scan_group_members.avatar_member')}
-                          className="w-12 h-12 object-cover rounded border border-slate-200 dark:border-zinc-600 shadow-sm cursor-pointer"
-                          onClick={() => {
-                            setSelectedImage(member.avatar);
-                            setOpen(true);
-                          }}
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                    )}
+                  {/* Avatar */}
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={friend.avatar?.trim()}
+                      alt={friend.name}
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover 
+                       border border-slate-200 dark:border-zinc-500 
+                       transition-transform duration-300 
+                       group-hover:scale-110 cursor-pointer"
+                      onClick={() => {
+                        setSelectedImage(friend.avatar.trim());
+                        setOpen(true);
+                      }}
+                    />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-zinc-700"></span>
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="text-sm sm:text-base font-semibold text-slate-800 dark:text-zinc-100 truncate cursor-pointer hover:text-green-600"
+                      title={friend.name}
+                      onClick={() => {
+                        window.open(
+                          `https://www.facebook.com/${friend.id}`,
+                          '_blank'
+                        );
+                      }}
+                    >
+                      {friend.name}
+                    </p>
+                    <p
+                      className="text-xs sm:text-sm text-slate-500 dark:text-zinc-300 truncate cursor-pointer hover:underline max-w-[180px] sm:max-w-[220px]"
+                      title={friend.id}
+                      onClick={() => {
+                        window.open(
+                          `https://www.facebook.com/${friend.id}`,
+                          '_blank'
+                        );
+                      }}
+                    >
+                      {friend.id}
+                    </p>
                   </div>
                 </div>
               ))
             )}
           </div>
-          <div className="hidden lg:block bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-slate-200 dark:border-zinc-700 overflow-hidden min-w-0">
-            <div className="max-h-[380px] overflow-y-auto custom-scroll">
-              <table className="w-full text-xs">
-                <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-zinc-900">
-                  <tr>
-                    <th className="px-1 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-12">
-                      STT
-                    </th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-80">
-                      {t('scan_group_members.uid_member')}
-                    </th>
-                    <th className="px-1 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-24">
-                      {t('scan_group_members.name_member')}
-                    </th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-30">
-                      {t('scan_group_members.avatar_member')}
-                    </th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 dark:text-zinc-200 text-center whitespace-nowrap w-48">
-                      {t('scan_group_members.join_status_text')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-zinc-700">
-                  {!dataScanGroupMembers ||
-                  dataScanGroupMembers.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={7}
-                        className="px-3 py-6 text-center text-slate-500 dark:text-slate-300 bg-white dark:bg-zinc-800 font-semibold text-sm"
-                      >
-                        {t('common.no_data')}
-                      </td>
-                    </tr>
-                  ) : (
-                    dataScanGroupMembers.map((member, index) => (
-                      <tr
-                        key={member.uid}
-                        className="hover:bg-green-50 dark:hover:bg-zinc-800 transition-colors duration-200 bg-white dark:bg-zinc-800 cursor-pointer animate-fadeIn"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <td className="px-1 py-2 text-slate-700 dark:text-slate-200 font-medium text-center whitespace-nowrap w-12">
-                          {index + 1}
-                        </td>
-                        <td
-                          className="px-1 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24 font-medium"
-                          onClick={() => {
-                            navigator.clipboard.writeText(member.uid);
-                            showToast('common.copied_button');
-                          }}
-                        >
-                          {member.uid}
-                        </td>
-                        <td
-                          className="px-2 py-2 text-slate-700 dark:text-slate-200 text-center font-medium max-w-[300px]"
-                          onClick={() => {
-                            navigator.clipboard.writeText(member.name);
-                            showToast('common.copied_button');
-                          }}
-                        >
-                          <span
-                            className="block truncate mx-auto"
-                            title={member.name}
-                          >
-                            {member.name}
-                          </span>
-                        </td>
-                        <td className="px-2 py-2 text-slate-700 dark:text-slate-200 text-center w-30">
-                          {member.avatar ? (
-                            member.avatar && (
-                              <div className="flex flex-wrap gap-1 justify-center">
-                                {member.avatar
-                                  .split('|')
-                                  .map((img, imgIndex) => (
-                                    <img
-                                      key={imgIndex}
-                                      src={img.trim()}
-                                      alt={`Ảnh ${imgIndex + 1}`}
-                                      className="w-12 h-12 object-cover rounded border border-slate-200 dark:border-zinc-600 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
-                                      onClick={() => {
-                                        setSelectedImage(img.trim());
-                                        setOpen(true);
-                                      }}
-                                    />
-                                  ))}
-                              </div>
-                            )
-                          ) : (
-                            <span className="text-slate-400">—</span>
-                          )}
-                        </td>
-                        <td className="px-1 py-2 text-slate-700 dark:text-slate-200 text-center whitespace-nowrap w-24 font-medium">
-                          {member.join_status_text}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+
           <Preview isOpen={open} onClose={() => setOpen(false)}>
             <img
               src={
@@ -676,4 +566,4 @@ const ScanGroupMembers = () => {
   );
 };
 
-export default ScanGroupMembers;
+export default ScanFacebookFriends;

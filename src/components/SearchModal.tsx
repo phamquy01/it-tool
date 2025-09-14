@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import { toolCategories } from '../utils/constants/toolCategories';
+import { getAllTools } from '../utils/constants/toolCategories';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -15,14 +15,7 @@ const SearchModal = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<typeof allTools>([]);
   const { t } = useTranslation();
-  const allTools = toolCategories.flatMap((cat) =>
-    cat.items.map((item) => ({
-      ...item,
-      category: t(cat.title),
-      label: t(item.label),
-      description: t(item.description),
-    }))
-  );
+  const allTools = getAllTools();
 
   const fuse = new Fuse(allTools, {
     keys: ['label', 'description', 'category'],
@@ -112,7 +105,7 @@ const SearchModal = ({
                         {t(item.label)}
                       </div>
                       <div className="text-xs text-zinc-500 dark:text-zinc-400 group-hover:text-white dark:group-hover:text-white">
-                        {t(item.category)} • {t(item.description)}
+                        {t(item.category ?? '')} • {t(item.description)}
                       </div>
                     </div>
                   </li>

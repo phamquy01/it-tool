@@ -1,43 +1,23 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   Ampersand,
+  Contact,
   CopyMinus,
-  // Shuffle,
-  // Fingerprint,
-  // EyeOff,
-  // FileLock,
-  // ArrowDown01,
-  // LockKeyhole,
-  // Menu,
-  // FileText,
-  // HardDriveUpload,
-  // RectangleEllipsis,
-  // Calendar1,
-  // ArrowLeftRight,
   Facebook,
   Funnel,
   Merge,
+  MessageSquareText,
   Scan,
   ScanText,
+  ScrollText,
   ShieldCheck,
   SmilePlus,
   Split,
+  UserRoundCheck,
   UserRoundSearch,
   UsersRound,
+  UserStar,
 } from 'lucide-react';
-// import TokenGenerator from '../../pages/crypto/TokenGenerator';
-// import HashText from '../../pages/crypto/HashText';
-// import Bcrypt from '../../pages/crypto/Bcrypt';
-// import UUID from '../../pages/crypto/UUID';
-// import ULID from '../../pages/crypto/ULID';
-// import Encryption from '../../pages/crypto/Encryption';
-// import BIP39 from '../../pages/crypto/BIP39';
-// import HmacGenerator from '../../pages/crypto/HmacGenerator';
-// import RSAKeyGenerator from '../../pages/crypto/RSAKeyGenerator';
-// import PasswordStrengthAnalyser from '../../pages/crypto/PasswordStrengthAnalyser';
-// import PDFSignatureChecker from '../../pages/crypto/PDFSignatureChecker';
-// import DateTimeConverter from '../../pages/converter/DateTimeConverter';
-// import IntegerBaseConverter from '../../pages/converter/IntegerBaseConverter';
 import CheckLiveUID from '../../pages/facebook/CheckLiveUID';
 import FilterDataFromContent from '../../pages/facebook/FilterDataFromContent';
 import GetOtpFrom2FA from '../../pages/facebook/GetOtpFrom2FA';
@@ -50,6 +30,11 @@ import IconFacebook from '../../pages/facebook/IconFacebook';
 import ScanFbGroupByKeyword from '../../pages/facebook/ScanFbGroupByKeyword';
 import ScanPostByKeyword from '../../pages/facebook/ScanPostByKeyword';
 import ScanGroupMembers from '../../pages/facebook/ScanGroupMembers';
+import ScanTiktokFollower from '../../pages/tiktok/ScanTiktokFollower';
+import ScanTiktokFollowing from '../../pages/tiktok/ScanTiktokFollowing';
+import ScanTiktokComment from '../../pages/tiktok/ScanTiktokComment';
+import ScanFacebookFriends from '../../pages/facebook/ScanFacebookFriends';
+import ScanFacebookFollowers from '../../pages/facebook/ScanFacebookFollowers';
 
 export interface ToolItem {
   component: React.FC;
@@ -57,6 +42,7 @@ export interface ToolItem {
   icon: LucideIcon;
   path: string;
   description: string;
+  category?: string;
 }
 
 export interface ToolCategory {
@@ -127,6 +113,47 @@ export const toolCategories: ToolCategory[] = [
         path: '/scan-group-members',
         description: 'sidebar.tools.facebook.scan_group_members.description',
         component: ScanGroupMembers,
+      },
+      {
+        label: 'sidebar.tools.facebook.scan_facebook_friends.title',
+        icon: ScrollText,
+        path: '/scan-facebook-friends',
+        description: 'sidebar.tools.facebook.scan_facebook_friends.description',
+        component: ScanFacebookFriends,
+      },
+      {
+        label: 'sidebar.tools.facebook.scan_facebook_followers.title',
+        icon: Contact,
+        path: '/scan-facebook-followers',
+        description:
+          'sidebar.tools.facebook.scan_facebook_followers.description',
+        component: ScanFacebookFollowers,
+      },
+    ],
+  },
+  {
+    title: 'sidebar.tools.tiktok.category',
+    items: [
+      {
+        label: 'sidebar.tools.tiktok.scan_tiktok_follower.title',
+        icon: UserRoundCheck,
+        path: '/scan-tiktok-follower',
+        description: 'sidebar.tools.tiktok.scan_tiktok_follower.description',
+        component: ScanTiktokFollower,
+      },
+      {
+        label: 'sidebar.tools.tiktok.scan_tiktok_following.title',
+        icon: UserStar,
+        path: '/scan-tiktok-following',
+        description: 'sidebar.tools.tiktok.scan_tiktok_following.description',
+        component: ScanTiktokFollowing,
+      },
+      {
+        label: 'sidebar.tools.tiktok.scan_tiktok_comment.title',
+        icon: MessageSquareText,
+        path: '/scan-tiktok-comment',
+        description: 'sidebar.tools.tiktok.scan_tiktok_comment.description',
+        component: ScanTiktokComment,
       },
     ],
   },
@@ -263,12 +290,44 @@ export const toolCategories: ToolCategory[] = [
   // },
 ];
 
-// Helper function to get all tools as a flat array
+export const getCategoryColor = (category: string) => {
+  const configs = {
+    'sidebar.tools.facebook.category': {
+      bg: 'bg-blue-600',
+      lightBg: 'bg-blue-50 dark:bg-blue-500/20',
+      text: 'text-blue-700 dark:text-blue-300',
+      icon: 'text-blue-600 dark:text-blue-400',
+    },
+    'sidebar.tools.tiktok.category': {
+      bg: 'bg-black',
+      lightBg: 'bg-gray-900 dark:bg-gray-600/30',
+      text: 'text-gray-100 dark:text-gray-100',
+      icon: 'text-white dark:text-gray-400',
+    },
+    'sidebar.tools.instagram.category': {
+      bg: 'bg-gradient-to-r from-purple-500 to-pink-500',
+      lightBg: 'bg-pink-50 dark:bg-pink-500/20',
+      text: 'text-pink-700 dark:text-pink-300',
+      icon: 'text-pink-600 dark:text-pink-400',
+    },
+    'sidebar.tools.twitter.category': {
+      bg: 'bg-blue-400',
+      lightBg: 'bg-blue-50 dark:bg-blue-400/20',
+      text: 'text-blue-700 dark:text-blue-300',
+      icon: 'text-blue-600 dark:text-blue-400',
+    },
+  };
+  return configs[category as keyof typeof configs] || null;
+};
 export const getAllTools = (): ToolItem[] => {
-  return toolCategories.flatMap((category) => category.items);
+  return toolCategories.flatMap((category) =>
+    category.items.map((item) => ({
+      ...item,
+      category: category.title,
+    }))
+  );
 };
 
-// Helper function to get favorite tools from localStorage
 export const getFavoriteTools = (): ToolItem[] => {
   const stored = localStorage.getItem('favoriteTools');
   if (!stored) return [];
@@ -279,7 +338,6 @@ export const getFavoriteTools = (): ToolItem[] => {
   return allTools.filter((tool) => favoritePaths.includes(tool.path));
 };
 
-// Helper function to get toolCategories with favorites populated
 export const getToolCategoriesWithFavorites = (): ToolCategory[] => {
   const categories = [...toolCategories];
   categories[0].items = getFavoriteTools();

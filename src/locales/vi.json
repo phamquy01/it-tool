@@ -9,7 +9,9 @@
   "home": {
     "title_card": "Bạn thích max-tools?",
     "description_card": "Hãy bắt đầu sử dụng ngay những công cụ dưới đây để công việc của bạn đạt hiệu quả tối đa!",
-    "usage_statistics": "Thống kê sử dụng"
+    "usage_statistics": "Thống kê sử dụng",
+    "favorite_tools": "Công cụ yêu thích của bạn",
+    "all_tools": "Tất cả công cụ"
   },
   "header": {
     "search": "Tìm kiếm",
@@ -52,6 +54,29 @@
         "scan_group_members": {
           "title": "Quét thành viên nhóm",
           "description": "Quét tất cả thành viên trong một nhóm Facebook."
+        },
+        "scan_facebook_friends": {
+          "title": "Quét danh sách bạn bè",
+          "description": "Quét tất cả bạn bè từ tài khoản Facebook của bạn."
+        },
+        "scan_facebook_followers": {
+          "title": "Quét danh sách follower",
+          "description": "Quét tất cả người theo dõi từ tài khoản Facebook của bạn."
+        }
+      },
+      "tiktok": {
+        "category": "TikTok",
+        "scan_tiktok_follower": {
+          "title": "Quét danh sách follower",
+          "description": "Quét danh sách người đang theo dõi kênh tiktok"
+        },
+        "scan_tiktok_following": {
+          "title": "Quét danh sách following",
+          "description": "Quét danh sách người mà kênh tiktok đang theo dõi"
+        },
+        "scan_tiktok_comment": {
+          "title": "Quét danh sách bình luận",
+          "description": "Quét danh sách bình luận của 1 video tiktok"
         }
       },
       "string_processing_tool": {
@@ -235,6 +260,97 @@
     "scan_success": "Đã quét thành công",
     "export_success": "Xuất file Excel thành công!",
     "total_members_found": "Tổng số thành viên đã tìm thấy"
+  },
+  "scan_facebook_friends": {
+    "cookie": "Cookie (Hệ thống cam kết không lưu lại cookie của người dùng)",
+    "cookie_guide": "Hướng dẫn lấy cookie facebook",
+    "proxy": "Proxy",
+    "uid": "ID người dùng",
+    "limit": "Giới hạn bạn bè",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "friends": "Bạn bè",
+    "avatar_friend": "Ảnh đại diện",
+    "name_friend": "Tên bạn bè",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_friends_found": "Tổng số bạn bè đã tìm thấy"
+  },
+  "scan_facebook_follower": {
+    "cookie": "Cookie (Hệ thống cam kết không lưu lại cookie của người dùng)",
+    "cookie_guide": "Hướng dẫn lấy cookie facebook",
+    "proxy": "Proxy",
+    "uid": "ID người dùng",
+    "limit": "Giới hạn người theo dõi",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "followers": "Người theo dõi",
+    "avatar_follower": "Ảnh đại diện",
+    "name_follower": "Tên người theo dõi",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_followers_found": "Tổng số người theo dõi đã tìm thấy"
+  },
+  "scan_tiktok_follower": {
+    "user": "Nhập user tiktok",
+    "limit": "Giới hạn người dùng",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "users": "Người dùng",
+    "user_id": "ID Người dùng",
+    "user_nickname": "Tên",
+    "user_username": "username",
+    "user_video_count": "Số lượng video đã đăng",
+    "follower_count": "Số người theo dõi kênh",
+    "following_count": "Số người kênh theo dõi",
+    "friend_count": "Số lượng bạn bè",
+    "heart_count": "Tổng số lượt thích",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_users_found": "Tổng số người dùng đã tìm thấy"
+  },
+  "scan_tiktok_following": {
+    "user": "Nhập user tiktok",
+    "limit": "Giới hạn người dùng",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "users": "Người dùng",
+    "user_id": "ID Người dùng",
+    "user_nickname": "Tên",
+    "user_username": "username",
+    "user_video_count": "Số lượng video đã đăng",
+    "follower_count": "Số người theo dõi kênh",
+    "following_count": "Số người kênh theo dõi",
+    "friend_count": "Số lượng bạn bè",
+    "heart_count": "Tổng số lượt thích",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_users_found": "Tổng số người dùng đã tìm thấy"
+  },
+  "scan_tiktok_comment": {
+    "video_id": "ID video",
+    "limit": "Giới hạn bình luận",
+    "button_scan": "Bắt đầu quét",
+    "scanning": "Đang quét...",
+    "button_export": "Xuất ra Excel",
+    "comments": "Bình luận",
+    "comment_time": "Thời gian bình luận",
+    "comment_id": "ID bình luận",
+    "comment_name": "Tên người bình luận",
+    "comment_text": "Nội dung bình luận",
+    "comment_username": "username người bình luận",
+    "fetch_success": "Đã lấy thành công",
+    "scan_success": "Đã quét thành công",
+    "export_success": "Xuất file Excel thành công!",
+    "total_members_found": "Tổng số bình luận đã tìm thấy"
   },
   "string_processing_tool": {
     "input_title": "Nhập vào chuỗi cần xử lý",

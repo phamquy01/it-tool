@@ -5,7 +5,7 @@ import {
   GROUP_PRIVACY,
   type GroupKeywordData,
   type ScanGroupKeywordResponse,
-} from '../../types/scan-facebook-group';
+} from '../../types/facebook/scan-facebook-group';
 import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
 import { trackUsage } from '../../utils/helpers/TrackUsage';

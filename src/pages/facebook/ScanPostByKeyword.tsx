@@ -8,7 +8,7 @@ import { trackUsage } from '../../utils/helpers/TrackUsage';
 import type {
   PostKeywordData,
   ScanPostByKeywordResponse,
-} from '../../types/scan-post-by-keyword';
+} from '../../types/facebook/scan-post-by-keyword';
 import { formatDate } from '../../utils/helpers/formatDate';
 import Preview from '../../components/preview';
 import { debounce } from 'lodash';
